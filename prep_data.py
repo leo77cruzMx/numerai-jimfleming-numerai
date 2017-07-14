@@ -17,11 +17,11 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.cross_validation import StratifiedKFold
 
 def main():
-    df_train = pd.read_csv('data/round7/numerai_training_data.csv')
-    df_test = pd.read_csv('data/round7/numerai_tournament_data.csv')
+    df_train = pd.read_csv('data/round/numerai_training_data.csv')
+    df_test = pd.read_csv('data/round/numerai_tournament_data.csv')
 
-    feature_cols = list(df_train.columns[:-1])
-    target_col = df_train.columns[-1]
+    feature_cols = [f for f in list(df_train) if 'feature' in f]
+    target_col = 'target'
     test_col = 'is_test'
     id_col = 't_id'
 

@@ -21,3 +21,9 @@ Folder structure:
     - lr.py - logistic regression with t-SNE features
     - pairwise.py - sklearn variant of the pairwise model
     - simple.py - simple logistic regression with polynomial features
+
+# Running in a container
+
+```
+docker build -t jim . && docker run --name jim --rm -v $PWD/data:/data -v $PWD/predictions:/predictions jim
+```

@@ -48,11 +48,11 @@ def main():
 
     p_test = classifier.predict_proba(X_test)
     df_pred = pd.DataFrame({
-        't_id': df_test['t_id'],
+        'id': df_test['id'],
         'probability': p_test[:,1]
     })
-    csv_path = 'predictions/predictions_{}_{}.csv'.format(int(time.time()), loss)
-    df_pred.to_csv(csv_path, columns=('t_id', 'probability'), index=None)
+    csv_path = 'predictions/predictions_{}_{}.simple.csv'.format(int(time.time()), loss)
+    df_pred.to_csv(csv_path, columns=('id', 'probability'), index=None)
     print('Saved: {}'.format(csv_path))
 
 if __name__ == '__main__':

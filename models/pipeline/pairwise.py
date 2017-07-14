@@ -174,11 +174,11 @@ def main():
     p_test = np.mean(p_test, axis=0)
 
     df_pred = pd.DataFrame({
-        't_id': df_test['t_id'],
+        'id': df_test['id'],
         'probability': p_test[:,1]
     })
-    csv_path = 'predictions/predictions_{}_{}.csv'.format(int(time.time()), loss)
-    df_pred.to_csv(csv_path, columns=('t_id', 'probability'), index=None)
+    csv_path = 'predictions/predictions_{}_{}.pairwise.csv'.format(int(time.time()), loss)
+    df_pred.to_csv(csv_path, columns=('id', 'probability'), index=None)
     print('Saved: {}'.format(csv_path))
 
 if __name__ == '__main__':
