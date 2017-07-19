@@ -51,11 +51,11 @@ def main(_):
     with tf.variable_scope('model', reuse=True):
         test_model = Model(features, targets, is_training=False)
 
-    summary_op = tf.merge_all_summaries()
+    summary_op = tf.summary.merge_all()
     logdir = 'logs/{}'.format(int(time.time()))
     supervisor = tf.train.Supervisor(logdir=logdir, summary_op=None)
     with supervisor.managed_session() as sess:
-        summary_writer = tf.train.SummaryWriter(logdir, graph=sess.graph)
+        summary_writer = tf.summary.FileWriter(logdir, graph=sess.graph)
 
         print('Training model with {} parameters...'.format(train_model.num_parameters))
         optimize_d, optimize_g = True, True

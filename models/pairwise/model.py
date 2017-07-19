@@ -14,11 +14,11 @@ class Model(object):
         with tf.variable_scope('feature_extractor', reuse=True):
             embedding_R = self.feature_extractor(features_R, is_training)
 
-        embedding = tf.concat(1, [embedding_L, embedding_R])
+        embedding = tf.concat([embedding_L, embedding_R], 1)
         logits = self.classifier(embedding, is_training)
         self.predictions = tf.nn.softmax(logits)
 
-        cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits, targets)
+        cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=targets)
         self.loss = tf.reduce_mean(cross_entropy, name='loss')
         tf.contrib.layers.summarize_tensor(self.loss)
         tf.contrib.losses.add_loss(self.loss)
@@ -35,8 +35,7 @@ class Model(object):
                 learning_rate=self.learning_rate,
                 clip_gradients=None,
                 gradient_noise_scale=None,
-                optimizer=optimizer,
-                moving_average_decay=None)
+                optimizer=optimizer)
 
     def feature_extractor(self, features, is_training):
         relu_init = tf.contrib.layers.variance_scaling_initializer(factor=2.0, mode='FAN_IN')

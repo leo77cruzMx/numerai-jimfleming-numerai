@@ -65,7 +65,7 @@ def save_tsne(perplexity, dimensions=2, polynomial=False):
 def main():
     for perplexity in [5, 10, 15, 20, 30, 40, 50]:
         save_tsne(perplexity)
-    for perplexity in [10, 20, 30, 40, 50]:
+    for perplexity in [5, 10, 15, 20, 30, 40, 50]:
         save_tsne(perplexity, polynomial=True)
     save_tsne(30, dimensions=3)
 

@@ -177,7 +177,7 @@ def main():
         'id': df_test['id'],
         'probability': p_test[:,1]
     })
-    csv_path = 'predictions/predictions_{}_{}.pairwise.csv'.format(int(time.time()), loss)
+    csv_path = 'predictions/predictions_{}.pairwise.csv'.format(loss)
     df_pred.to_csv(csv_path, columns=('id', 'probability'), index=None)
     print('Saved: {}'.format(csv_path))
 

@@ -82,11 +82,11 @@ def main(_):
     best = None
     wait = 0
 
-    summary_op = tf.merge_all_summaries()
+    summary_op = tf.summary.merge_all()
     logdir = 'logs/{}'.format(int(time.time()))
     supervisor = tf.train.Supervisor(logdir=logdir, summary_op=None)
     with supervisor.managed_session() as sess:
-        summary_writer = tf.train.SummaryWriter(logdir, graph=sess.graph)
+        summary_writer = tf.summary.FileWriter(logdir, graph=sess.graph)
 
         print('Training model with {} parameters...'.format(train_model.num_parameters))
         with tqdm(total=FLAGS.num_epochs) as pbar:
@@ -147,11 +147,11 @@ def main(_):
             features: X_test_concat,
         })
         df_pred = pd.DataFrame({
-            't_id': df_test['t_id'],
+            'id': df_test['id'],
             'probability': p_test[:,1]
         })
-        csv_path = 'predictions/predictions_{}_{}.csv'.format(int(time.time()), loss)
-        df_pred.to_csv(csv_path, columns=('t_id', 'probability'), index=None)
+        csv_path = 'predictions/predictions_{}.tn_classifier.csv'.format(loss)
+        df_pred.to_csv(csv_path, columns=('id', 'probability'), index=None)
         print('Saved: {}'.format(csv_path))
 
 if __name__ == "__main__":

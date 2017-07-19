@@ -74,7 +74,7 @@ def main(_):
 
     X_valid_L, X_valid_R, y_valid_both = divide_samples(X_valid_concat, y_valid)
 
-    num_features = len(feature_cols) + 2
+    num_features = len(feature_cols) + tsne_train.shape[1]
     features_L = tf.placeholder(tf.float32, shape=[None, num_features], name='features_L')
     features_R = tf.placeholder(tf.float32, shape=[None, num_features], name='features_R')
     targets = tf.placeholder(tf.int32, shape=[None], name='targets')
@@ -88,11 +88,11 @@ def main(_):
     best = None
     wait = 0
 
-    summary_op = tf.merge_all_summaries()
+    summary_op = tf.summary.merge_all()
     logdir = 'logs/{}'.format(int(time.time()))
     supervisor = tf.train.Supervisor(logdir=logdir, summary_op=None)
     with supervisor.managed_session() as sess:
-        summary_writer = tf.train.SummaryWriter(logdir, graph=sess.graph)
+        summary_writer = tf.summary.FileWriter(logdir, graph=sess.graph)
 
         print('Training model with {} parameters...'.format(train_model.num_parameters))
         with tqdm(total=FLAGS.num_epochs) as pbar:
@@ -181,11 +181,11 @@ def main(_):
         p_test = np.mean(p_test, axis=0)
 
         df_pred = pd.DataFrame({
-            't_id': df_test['t_id'],
+            'id': df_test['id'],
             'probability': p_test[:,1]
         })
-        csv_path = 'predictions/predictions_{}_{}.csv'.format(int(time.time()), loss)
-        df_pred.to_csv(csv_path, columns=('t_id', 'probability'), index=None)
+        csv_path = 'predictions/predictions_{}.tf_pairwise.csv'.format(loss)
+        df_pred.to_csv(csv_path, columns=('id', 'probability'), index=None)
         print('Saved: {}'.format(csv_path))
 
 if __name__ == "__main__":

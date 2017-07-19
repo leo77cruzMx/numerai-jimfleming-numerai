@@ -44,7 +44,7 @@ class Model(object):
 
         self.predictions = tf.nn.softmax(logits)
 
-        cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits, targets)
+        cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=targets)
         self.loss = tf.reduce_mean(cross_entropy, name='loss')
         tf.contrib.layers.summarize_tensor(self.loss)
         tf.contrib.losses.add_loss(self.loss)
@@ -61,8 +61,7 @@ class Model(object):
                 learning_rate=self.learning_rate,
                 clip_gradients=None,
                 gradient_noise_scale=None,
-                optimizer=optimizer,
-                moving_average_decay=None)
+                optimizer=optimizer)
 
     @property
     def num_parameters(self):
