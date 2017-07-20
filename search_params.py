@@ -8,9 +8,10 @@ import sklearn.pipeline as pipeline
 import sklearn.decomposition as decomposition
 import sklearn.linear_model as linear_model
 import sklearn.model_selection as model_selection
+import sklearn.preprocessing as preprocessing
 
 def build_pipeline(portion):
-    return pipeline.Pipeline([('pca', decomposition.PCA()), ('logisticregression', linear_model.LogisticRegression())])
+    return pipeline.Pipeline([('poly', preprocessing.PolynomialFeatures(degree=2)), ('pca', decomposition.PCA()), ('logisticregression', linear_model.LogisticRegression())])
 
 def main():
     df_train = pd.read_csv('data/train_data.csv')
@@ -36,7 +37,7 @@ def main():
         # 'featureunion__portionkernelpca__kernel': ['cosine', 'rbf'],
         # 'featureunion__portionisomap__n_neighbors': range(1, 11),
         # 'featureunion__portionisomap__n_components': range(2, 102, 2),
-        'pca__n_components': list(range(2, X_train.shape[1] + X_train_tsne.shape[1] + 1, 2)),
+        'pca__n_components': list(range(2, 202, 2)),
         'pca__whiten': [True, False],
         'logisticregression__C': [1e-4, 1e-3, 1e-2, 1e-1, 1e-0],
         'logisticregression__penalty': ['l1', 'l2']
