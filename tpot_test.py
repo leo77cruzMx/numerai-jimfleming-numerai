@@ -26,8 +26,8 @@ def main():
     y_valid = df_valid[target_col].values
 
     tsne_data = np.load('data/tsne_2d_5p.npz')
-    tsne_train = tsne_data['X_train']
-    tsne_valid = tsne_data['X_valid']
+    tsne_train = tsne_data['train']
+    tsne_valid = tsne_data['valid']
 
     # concat features
     X_train_concat = np.concatenate([X_train, tsne_train], axis=1)
@@ -37,12 +37,12 @@ def main():
         max_time_mins=60 * 24,
         population_size=100,
         scoring='log_loss',
-        num_cv_folds=3,
+        cv=3,
         verbosity=2,
         random_state=67)
     tpot.fit(X_train_concat, y_train)
     print(tpot.score(X_valid_concat, y_valid))
-    tpot.export('tpot_pipeline.py')
+    tpot.export('predictions/tpot_pipeline.py')
 
 if __name__ == '__main__':
     main()

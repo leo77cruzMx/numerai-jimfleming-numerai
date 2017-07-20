@@ -1,5 +1,8 @@
 FROM altermarkive/lab-environment
 
+ADD requirements.txt /tmp/requirements.txt
+RUN pip3 install --upgrade pip && pip3 install --no-cache-dir -r /tmp/requirements.txt && rm /tmp/requirements.txt
+
 ADD *.py /code/
 ADD models /code/models
 ADD notebooks /code/notebooks
