@@ -91,8 +91,7 @@ class Model(object):
             self.train_step = tf.contrib.layers.optimize_loss(self.total_loss, self.global_step, \
                 learning_rate=self.learning_rate,
                 clip_gradients=1.0,
-                optimizer=optimizer,
-                moving_average_decay=None)
+                optimizer=optimizer)
 
     @property
     def num_parameters(self):

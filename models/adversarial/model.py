@@ -23,10 +23,10 @@ class Model(object):
         with tf.variable_scope('discriminator', reuse=True):
             D_, embedding_ = self.discriminator(G, is_training)
 
-        self.loss_real = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(D, tf.ones_like(D)))
-        self.loss_fake = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(D_, tf.zeros_like(D_)))
+        self.loss_real = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=D, labels=tf.ones_like(D)))
+        self.loss_fake = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=D_, labels=tf.zeros_like(D_)))
         self.loss_d = self.loss_real + self.loss_fake
-        self.loss_g = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(D_, tf.ones_like(D_)))
+        self.loss_g = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=D_, labels=tf.ones_like(D_)))
 
         if is_training:
             tf.contrib.layers.summarize_tensor(self.loss_real, tf.get_variable_scope().name + '/loss_real')
