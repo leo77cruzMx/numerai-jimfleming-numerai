@@ -1,2 +1,5 @@
 deap==1.0.1
 TPOT==0.8.3
+seaborn==0.8
+jupyter==1.0.0
+numexpr==2.6.2 # Required by SOMPY
