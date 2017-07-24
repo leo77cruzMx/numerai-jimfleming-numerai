@@ -8,9 +8,11 @@ import numpy as np
 import pandas as pd
 
 paths = [
-    glob.glob('predictions/predictions*.simple.csv')[0],
-    # glob.glob('predictions/predictions*.fm.csv')[0],
+    # glob.glob('predictions/predictions*.simple.csv')[0],
     glob.glob('predictions/predictions*.lr.csv')[0],
+    glob.glob('predictions/predictions*.fm.csv')[0],
+    # glob.glob('predictions/predictions*.tf_pairwise.csv')[0],
+    # glob.glob('predictions/predictions*.tn_classifier.csv')[0],
     glob.glob('predictions/predictions*.pairwise.csv')[0]
 ]
 
