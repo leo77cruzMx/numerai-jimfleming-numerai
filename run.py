@@ -1,6 +1,7 @@
 import glob
 import os
 import shutil
+import sys
 import numpy as np
 
 def merge_tsne(selection):
@@ -26,6 +27,12 @@ def merge_tsne(selection):
     X_test = np.concatenate([item['test'] for item in selected], axis=1)
     np.savez('/data/tsne.npz', X_train=X_train, X_valid=X_valid, X_test=X_test)
 
+def announce(text):
+    sys.stdout.write('{}\n'.format('-' * 80))
+    sys.stdout.write('{}\n'.format(text))
+    sys.stdout.write('{}\n'.format('-' * 80))
+    sys.stdout.flush()
+
 def main():
     if not os.path.isdir('/data'):
         os.mkdir('/data')
@@ -46,28 +53,47 @@ def main():
         os.mkdir('/predictions')
     except:
         pass
-    print('Data Preparation')
+    announce('Data Preparation')
     os.system('python3 /code/prep_data.py')
-    print('Feature Engineering')
+    announce('Simple Logistic Regression')
+    os.system('python3 /code/models/pipeline/simple.py')
+    announce('TF NN')
+    os.system('python3 /code/models/classifier/main.py')
+    announce('Basic data visualization notebook')
+    os.system('runipy /code/notebooks/Numerai.ipynb /code/notebooks/NumeraiOutput.ipynb')
+    os.system('jupyter nbconvert --to html /code/notebooks/NumeraiOutput.ipynb')
+    shutil.move('/code/notebooks/NumeraiOutput.ipynb', '/predictions/Numerai.ipynb')
+    shutil.move('/code/notebooks/NumeraiOutput.html', '/predictions/Numerai.html')
+    announce('Feature Engineering')
     os.system('python3 /code/fit_tsne.py')
     os.system('python3 /code/bh_tsne/prep_data.py')
     os.system('/code/bh_tsne/bh_tsne')
     os.system('python3 /code/bh_tsne/prep_result.py')
-    print('Simple Logistic Regression')
-    os.system('python3 /code/models/pipeline/simple.py')
-    print('Pairwise Interactions')
-    os.system('python3 /code/models/pipeline/pairwise.py')
-    print('Logistic Regression')
-    os.system('python3 /code/models/pipeline/lr.py')
-    print('Factorization Machines')
-    os.system('python3 /code/models/pipeline/fm.py')
-    print('Ensemble')
-    os.system('python3 /code/ensemble.py')
-    print('TF NN')
-    os.system('python3 /code/models/classifier/main.py')
-    print('TF Pairwise')
+    announce('Additional data visualization notebook')
+    os.system('runipy /code/notebooks/Visualization.ipynb /code/notebooks/VisualizationOutput.ipynb')
+    os.system('jupyter nbconvert --to html /code/notebooks/VisualizationOutput.ipynb')
+    shutil.move('/code/notebooks/VisualizationOutput.ipynb', '/predictions/Visualization.ipynb')
+    shutil.move('/code/notebooks/VisualizationOutput.html', '/predictions/Visualization.html')
+    shutil.move('/code/notebooks/tsne-3d-scatter.html', '/predictions/tsne-3d-scatter.html')
+    announce('TF Autoencoder')
+    os.system('python3 /code/models/autoencoder/main.py')
+    announce('TF Adversarial')
+    os.system('python3 /code/models/adversarial/main.py')
+    announce('TF Pairwise')
     merge_tsne([1])
     os.system('python3 /code/models/pairwise/main.py')
+    announce('Pairwise Interactions')
+    os.system('python3 /code/models/pipeline/pairwise.py')
+    announce('Searching parameters')
+    os.system('python3 /code/search_params.py')
+    announce('TPOT')
+    os.system('python3 /code/tpot_test.py')
+    announce('Logistic Regression')
+    os.system('python3 /code/models/pipeline/lr.py')
+    announce('Factorization Machines')
+    os.system('python3 /code/models/pipeline/fm.py')
+    announce('Ensemble')
+    os.system('python3 /code/ensemble.py')
 
 if __name__ == '__main__':
     main()
