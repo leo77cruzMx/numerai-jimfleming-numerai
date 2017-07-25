@@ -40,46 +40,51 @@ def main():
 
     X_test = df_test[feature_cols].values
 
-    tsne_data_10p = np.load('data/tsne_2d_10p_poly.npz')
-    tsne_data_20p = np.load('data/tsne_2d_20p_poly.npz')
-    tsne_data_30p = np.load('data/tsne_2d_30p_poly.npz')
-    tsne_data_40p = np.load('data/tsne_2d_40p_poly.npz')
-    tsne_data_50p = np.load('data/tsne_2d_50p_poly.npz')
+    tsne_data_2d_5p = np.load('data/tsne_2d_5p.npz')
+    tsne_data_2d_10p = np.load('data/tsne_2d_10p.npz')
+    tsne_data_2d_15p = np.load('data/tsne_2d_15p.npz')
+    tsne_data_2d_30p = np.load('data/tsne_2d_30p.npz')
+    tsne_data_2d_50p = np.load('data/tsne_2d_50p.npz')
+    tsne_data_3d_30p = np.load('data/tsne_3d_30p.npz')
 
     # concat features
     X_train_concat = {
         'X': X_train,
-        'tsne_10p': tsne_data_10p['train'],
-        'tsne_20p': tsne_data_20p['train'],
-        'tsne_30p': tsne_data_30p['train'],
-        'tsne_40p': tsne_data_40p['train'],
-        'tsne_50p': tsne_data_50p['train'],
+        'tsne_2d_5p': tsne_data_2d_5p['train'],
+        'tsne_2d_10p': tsne_data_2d_10p['train'],
+        'tsne_2d_15p': tsne_data_2d_15p['train'],
+        'tsne_2d_30p': tsne_data_2d_30p['train'],
+        'tsne_2d_50p': tsne_data_2d_50p['train'],
+        'tsne_3d_30p': tsne_data_3d_30p['train'],
     }
     X_valid_concat = {
         'X': X_valid,
-        'tsne_10p': tsne_data_10p['valid'],
-        'tsne_20p': tsne_data_20p['valid'],
-        'tsne_30p': tsne_data_30p['valid'],
-        'tsne_40p': tsne_data_40p['valid'],
-        'tsne_50p': tsne_data_50p['valid'],
+        'tsne_2d_5p': tsne_data_2d_5p['valid'],
+        'tsne_2d_10p': tsne_data_2d_10p['valid'],
+        'tsne_2d_15p': tsne_data_2d_15p['valid'],
+        'tsne_2d_30p': tsne_data_2d_30p['valid'],
+        'tsne_2d_50p': tsne_data_2d_50p['valid'],
+        'tsne_3d_30p': tsne_data_3d_30p['valid'],
     }
     X_test_concat = {
         'X': X_test,
-        'tsne_10p': tsne_data_10p['test'],
-        'tsne_20p': tsne_data_20p['test'],
-        'tsne_30p': tsne_data_30p['test'],
-        'tsne_40p': tsne_data_40p['test'],
-        'tsne_50p': tsne_data_50p['test'],
+        'tsne_2d_5p': tsne_data_2d_5p['test'],
+        'tsne_2d_10p': tsne_data_2d_10p['test'],
+        'tsne_2d_15p': tsne_data_2d_15p['test'],
+        'tsne_2d_30p': tsne_data_2d_30p['test'],
+        'tsne_2d_50p': tsne_data_2d_50p['test'],
+        'tsne_3d_30p': tsne_data_3d_30p['test'],
     }
 
     # build pipeline
     classifier = Pipeline(steps=[
         ('features', FeatureUnion(transformer_list=[
-            ('tsne_10p', ItemSelector('tsne_10p')),
-            ('tsne_20p', ItemSelector('tsne_20p')),
-            ('tsne_30p', ItemSelector('tsne_30p')),
-            ('tsne_40p', ItemSelector('tsne_40p')),
-            ('tsne_50p', ItemSelector('tsne_50p')),
+            ('tsne_2d_5p', ItemSelector('tsne_2d_5p')),
+            ('tsne_2d_10p', ItemSelector('tsne_2d_10p')),
+            ('tsne_2d_15p', ItemSelector('tsne_2d_15p')),
+            ('tsne_2d_30p', ItemSelector('tsne_2d_30p')),
+            ('tsne_2d_50p', ItemSelector('tsne_2d_50p')),
+            ('tsne_3d_30p', ItemSelector('tsne_3d_30p')),
             ('X', ItemSelector('X')),
         ])),
         ('poly', PolynomialFeatures(degree=2)),

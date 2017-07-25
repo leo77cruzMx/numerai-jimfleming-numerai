@@ -47,9 +47,7 @@ def main():
     tsne_data_2d_5p = np.load('data/tsne_2d_5p.npz')
     tsne_data_2d_10p = np.load('data/tsne_2d_10p.npz')
     tsne_data_2d_15p = np.load('data/tsne_2d_15p.npz')
-    tsne_data_2d_20p = np.load('data/tsne_2d_20p.npz')
     tsne_data_2d_30p = np.load('data/tsne_2d_30p.npz')
-    tsne_data_2d_40p = np.load('data/tsne_2d_40p.npz')
     tsne_data_2d_50p = np.load('data/tsne_2d_50p.npz')
     tsne_data_3d_30p = np.load('data/tsne_3d_30p.npz')
 
@@ -59,9 +57,7 @@ def main():
         'tsne_2d_5p': tsne_data_2d_5p['train'],
         'tsne_2d_10p': tsne_data_2d_10p['train'],
         'tsne_2d_15p': tsne_data_2d_15p['train'],
-        # 'tsne_2d_20p': tsne_data_2d_20p['train'],
         'tsne_2d_30p': tsne_data_2d_30p['train'],
-        # 'tsne_2d_40p': tsne_data_2d_40p['train'],
         'tsne_2d_50p': tsne_data_2d_50p['train'],
         'tsne_3d_30p': tsne_data_3d_30p['train'],
     }
@@ -70,9 +66,7 @@ def main():
         'tsne_2d_5p': tsne_data_2d_5p['valid'],
         'tsne_2d_10p': tsne_data_2d_10p['valid'],
         'tsne_2d_15p': tsne_data_2d_15p['valid'],
-        # 'tsne_2d_20p': tsne_data_2d_20p['valid'],
         'tsne_2d_30p': tsne_data_2d_30p['valid'],
-        # 'tsne_2d_40p': tsne_data_2d_40p['valid'],
         'tsne_2d_50p': tsne_data_2d_50p['valid'],
         'tsne_3d_30p': tsne_data_3d_30p['valid'],
     }
@@ -81,9 +75,7 @@ def main():
         'tsne_2d_5p': tsne_data_2d_5p['test'],
         'tsne_2d_10p': tsne_data_2d_10p['test'],
         'tsne_2d_15p': tsne_data_2d_15p['test'],
-        # 'tsne_2d_20p': tsne_data_2d_20p['test'],
         'tsne_2d_30p': tsne_data_2d_30p['test'],
-        # 'tsne_2d_40p': tsne_data_2d_40p['test'],
         'tsne_2d_50p': tsne_data_2d_50p['test'],
         'tsne_3d_30p': tsne_data_3d_30p['test'],
     }
@@ -95,9 +87,7 @@ def main():
             ('tsne_2d_5p', ItemSelector('tsne_2d_5p')),
             ('tsne_2d_10p', ItemSelector('tsne_2d_10p')),
             ('tsne_2d_15p', ItemSelector('tsne_2d_15p')),
-            # ('tsne_2d_20p', ItemSelector('tsne_2d_20p')),
             ('tsne_2d_30p', ItemSelector('tsne_2d_30p')),
-            # ('tsne_2d_40p', ItemSelector('tsne_2d_40p')),
             ('tsne_2d_50p', ItemSelector('tsne_2d_50p')),
             ('tsne_3d_30p', ItemSelector('tsne_3d_30p')),
         ])),
