@@ -27,9 +27,9 @@ tf.app.flags.DEFINE_integer('num_epochs', 30, "")
 tf.app.flags.DEFINE_integer('batch_size', 128, "")
 
 def main(_):
-    df_train = pd.read_csv('data/train_data.csv')
-    df_valid = pd.read_csv('data/valid_data.csv')
-    df_test = pd.read_csv('data/test_data.csv')
+    df_train = pd.read_csv('/input/latest/train_data.csv')
+    df_valid = pd.read_csv('/input/latest/valid_data.csv')
+    df_test = pd.read_csv('/input/latest/test_data.csv')
 
     feature_cols = list(df_train.columns[:-1])
     target_col = df_train.columns[-1]
@@ -42,13 +42,11 @@ def main(_):
 
     X_test = df_test[feature_cols].values
 
-    tsne_data_5 = np.load('data/tsne_2d_5p_poly.npz')
-    tsne_data_15 = np.load('data/tsne_2d_15p_poly.npz')
-    tsne_data_10 = np.load('data/tsne_2d_10p_poly.npz')
-    tsne_data_20 = np.load('data/tsne_2d_20p_poly.npz')
-    tsne_data_30 = np.load('data/tsne_2d_30p_poly.npz')
-    tsne_data_40 = np.load('data/tsne_2d_40p_poly.npz')
-    tsne_data_50 = np.load('data/tsne_2d_50p_poly.npz')
+    tsne_data_5 = np.load('/output/tsne_2d_5p_poly.npz')
+    tsne_data_15 = np.load('/output/tsne_2d_15p_poly.npz')
+    tsne_data_10 = np.load('/output/tsne_2d_10p_poly.npz')
+    tsne_data_30 = np.load('/output/tsne_2d_30p_poly.npz')
+    tsne_data_50 = np.load('/output/tsne_2d_50p_poly.npz')
 
     X_train_concat = np.concatenate([
         X_train,
@@ -150,7 +148,7 @@ def main(_):
             'id': df_test['id'],
             'probability': p_test[:,1]
         })
-        csv_path = 'predictions/predictions_{}.tf_classifier.csv'.format(loss)
+        csv_path = '/output/predictions_{}.tf_classifier.csv'.format(loss)
         df_pred.to_csv(csv_path, columns=('id', 'probability'), index=None)
         print('Saved: {}'.format(csv_path))
 

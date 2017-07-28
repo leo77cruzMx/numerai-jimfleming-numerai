@@ -33,9 +33,9 @@ else:
     print('NOT denoising!')
 
 def main(_):
-    df_train = pd.read_csv('data/train_data.csv')
-    df_valid = pd.read_csv('data/valid_data.csv')
-    df_test = pd.read_csv('data/test_data.csv')
+    df_train = pd.read_csv('/input/latest/train_data.csv')
+    df_valid = pd.read_csv('/input/latest/valid_data.csv')
+    df_test = pd.read_csv('/input/latest/test_data.csv')
 
     feature_cols = list(df_train.columns)[:-1]
 
@@ -112,9 +112,9 @@ def main(_):
         z_test = sess.run(test_model.z, feed_dict={ features: X_test })
 
         if FLAGS.denoise:
-            np.savez('data/denoising.npz', z_train=z_train, z_valid=z_valid, z_test=z_test)
+            np.savez('/output/denoising.npz', z_train=z_train, z_valid=z_valid, z_test=z_test)
         else:
-            np.savez('data/autoencoder.npz', z_train=z_train, z_valid=z_valid, z_test=z_test)
+            np.savez('/output/autoencoder.npz', z_train=z_train, z_valid=z_valid, z_test=z_test)
 
 if __name__ == "__main__":
     tf.app.run()

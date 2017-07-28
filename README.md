@@ -25,5 +25,5 @@ Folder structure:
 # Running in a container
 
 ```
-docker build -t jim . && docker run --name jim --rm -v $PWD/data:/data -v $PWD/predictions:/predictions jim
+docker build -t app . && docker run --name app --rm -v $PWD/input:/input -v $PWD/output:/output app
 ```

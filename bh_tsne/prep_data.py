@@ -2,9 +2,9 @@ import struct
 import numpy as np
 import pandas as pd
 
-df_train = pd.read_csv('data/train_data.csv')
-df_valid = pd.read_csv('data/valid_data.csv')
-df_test = pd.read_csv('data/test_data.csv')
+df_train = pd.read_csv('/input/latest/train_data.csv')
+df_valid = pd.read_csv('/input/latest/valid_data.csv')
+df_test = pd.read_csv('/input/latest/test_data.csv')
 
 feature_cols = list(df_train.columns[:-1])
 target_col = df_train.columns[-1]

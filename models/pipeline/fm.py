@@ -27,9 +27,9 @@ from transformers import ItemSelector
 
 def main():
     # load data
-    df_train = pd.read_csv('data/train_data.csv')
-    df_valid = pd.read_csv('data/valid_data.csv')
-    df_test = pd.read_csv('data/test_data.csv')
+    df_train = pd.read_csv('/input/latest/train_data.csv')
+    df_valid = pd.read_csv('/input/latest/valid_data.csv')
+    df_test = pd.read_csv('/input/latest/test_data.csv')
 
     feature_cols = list(df_train.columns[:-1])
     target_col = df_train.columns[-1]
@@ -44,12 +44,12 @@ def main():
 
     X_test = df_test[feature_cols].values
 
-    tsne_data_2d_5p = np.load('data/tsne_2d_5p.npz')
-    tsne_data_2d_10p = np.load('data/tsne_2d_10p.npz')
-    tsne_data_2d_15p = np.load('data/tsne_2d_15p.npz')
-    tsne_data_2d_30p = np.load('data/tsne_2d_30p.npz')
-    tsne_data_2d_50p = np.load('data/tsne_2d_50p.npz')
-    tsne_data_3d_30p = np.load('data/tsne_3d_30p.npz')
+    tsne_data_2d_5p = np.load('/output/tsne_2d_5p.npz')
+    tsne_data_2d_10p = np.load('/output/tsne_2d_10p.npz')
+    tsne_data_2d_15p = np.load('/output/tsne_2d_15p.npz')
+    tsne_data_2d_30p = np.load('/output/tsne_2d_30p.npz')
+    tsne_data_2d_50p = np.load('/output/tsne_2d_50p.npz')
+    tsne_data_3d_30p = np.load('/output/tsne_3d_30p.npz')
 
     # concat features
     X_train_concat = {
@@ -111,7 +111,7 @@ def main():
         'id': df_test['id'],
         'probability': p_test
     })
-    csv_path = 'predictions/predictions_{}.fm.csv'.format(loss)
+    csv_path = '/output/predictions_{}.fm.csv'.format(loss)
     df_pred.to_csv(csv_path, columns=('id', 'probability'), index=None)
     print('Saved: {}'.format(csv_path))
 

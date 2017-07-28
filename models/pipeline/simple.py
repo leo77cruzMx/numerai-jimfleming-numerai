@@ -17,9 +17,9 @@ from transformers import ItemSelector
 
 def main():
     # load data
-    df_train = pd.read_csv('data/train_data.csv')
-    df_valid = pd.read_csv('data/valid_data.csv')
-    df_test = pd.read_csv('data/test_data.csv')
+    df_train = pd.read_csv('/input/latest/train_data.csv')
+    df_valid = pd.read_csv('/input/latest/valid_data.csv')
+    df_test = pd.read_csv('/input/latest/test_data.csv')
 
     feature_cols = list(df_train.columns[:-1])
     target_col = df_train.columns[-1]
@@ -51,7 +51,7 @@ def main():
         'id': df_test['id'],
         'probability': p_test[:,1]
     })
-    csv_path = 'predictions/predictions_{}.simple.csv'.format(loss)
+    csv_path = '/output/predictions_{}.simple.csv'.format(loss)
     df_pred.to_csv(csv_path, columns=('id', 'probability'), index=None)
     print('Saved: {}'.format(csv_path))
 

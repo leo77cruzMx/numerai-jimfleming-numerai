@@ -2,7 +2,7 @@ FROM ubuntu:xenial-20170710
 
 RUN apt-get -yq update && \
     DEBIAN_FRONTEND=noninteractive \
-    apt-get -yq install python3 python3-pip python3-dev python3-tk build-essential git libopenblas-dev libblas-dev libatlas-base-dev
+    apt-get -yq install curl python3 python3-pip python3-dev python3-tk build-essential git libopenblas-dev libblas-dev libatlas-base-dev
 
 ADD requirements.txt /tmp/requirements.txt
 RUN pip3 install --upgrade pip && \

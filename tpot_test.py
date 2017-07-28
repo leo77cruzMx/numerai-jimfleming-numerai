@@ -13,9 +13,9 @@ import pandas as pd
 from tpot import TPOTClassifier
 
 def main():
-    df_train = pd.read_csv('data/train_data.csv')
-    df_valid = pd.read_csv('data/valid_data.csv')
-    df_test = pd.read_csv('data/test_data.csv')
+    df_train = pd.read_csv('/input/latest/train_data.csv')
+    df_valid = pd.read_csv('/input/latest/valid_data.csv')
+    df_test = pd.read_csv('/input/latest/test_data.csv')
 
     feature_cols = list(df_train.columns[:-1])
     target_col = df_train.columns[-1]
@@ -28,7 +28,7 @@ def main():
 
     X_test = df_test[feature_cols].values
 
-    tsne_data = np.load('data/tsne_2d_5p.npz')
+    tsne_data = np.load('/output/tsne_2d_5p.npz')
     tsne_train = tsne_data['train']
     tsne_valid = tsne_data['valid']
     tsne_test = tsne_data['test']
@@ -48,14 +48,14 @@ def main():
     tpot.fit(X_train_concat, y_train)
     loss = tpot.score(X_valid_concat, y_valid)
     print(loss)
-    tpot.export('predictions/tpot_pipeline.py')
+    tpot.export('/output/tpot_pipeline.py')
 
     p_test = tpot.predict_proba(X_test_concat)
     df_pred = pd.DataFrame({
         'id': df_test['id'],
         'probability': p_test[:,1]
     })
-    csv_path = 'predictions/predictions_{}.tpot.csv'.format(loss)
+    csv_path = '/output/predictions_{}.tpot.csv'.format(loss)
     df_pred.to_csv(csv_path, columns=('id', 'probability'), index=None)
     print('Saved: {}'.format(csv_path))
 

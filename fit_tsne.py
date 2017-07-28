@@ -16,9 +16,9 @@ from tsne import bh_sne
 from sklearn.preprocessing import PolynomialFeatures
 
 def save_tsne(perplexity, dimensions=2, polynomial=False):
-    df_train = pd.read_csv('data/train_data.csv')
-    df_valid = pd.read_csv('data/valid_data.csv')
-    df_test = pd.read_csv('data/test_data.csv')
+    df_train = pd.read_csv('/input/latest/train_data.csv')
+    df_valid = pd.read_csv('/input/latest/valid_data.csv')
+    df_test = pd.read_csv('/input/latest/test_data.csv')
 
     feature_cols = list(df_train.columns[:-1])
     target_col = df_train.columns[-1]
@@ -52,9 +52,9 @@ def save_tsne(perplexity, dimensions=2, polynomial=False):
     assert(len(tsne_test) == len(X_test))
 
     if polynomial:
-        save_path = 'data/tsne_{}d_{}p_poly.npz'.format(dimensions, perplexity)
+        save_path = '/output/tsne_{}d_{}p_poly.npz'.format(dimensions, perplexity)
     else:
-        save_path = 'data/tsne_{}d_{}p.npz'.format(dimensions, perplexity)
+        save_path = '/output/tsne_{}d_{}p.npz'.format(dimensions, perplexity)
 
     np.savez(save_path, \
         train=tsne_train, \

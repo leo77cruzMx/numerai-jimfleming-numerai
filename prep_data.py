@@ -17,8 +17,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.cross_validation import StratifiedKFold
 
 def main():
-    df_train = pd.read_csv('data/round/numerai_training_data.csv')
-    df_test = pd.read_csv('data/round/numerai_tournament_data.csv')
+    df_train = pd.read_csv('/input/latest/numerai_training_data.csv')
+    df_test = pd.read_csv('/input/latest/numerai_tournament_data.csv')
 
     feature_cols = [f for f in list(df_train) if 'feature' in f]
     target_col = 'target'
@@ -76,9 +76,9 @@ def main():
     df_valid = df_train_sorted.iloc[-validation_size:]
     print('Creating dataset with validation size: {}'.format(validation_size))
 
-    df_train.to_csv('data/train_data.csv', index_label=False)
-    df_valid.to_csv('data/valid_data.csv', index_label=False)
-    df_test.to_csv('data/test_data.csv', index_label=False)
+    df_train.to_csv('/input/latest/train_data.csv', index_label=False)
+    df_valid.to_csv('/input/latest/valid_data.csv', index_label=False)
+    df_test.to_csv('/input/latest/test_data.csv', index_label=False)
     print('Done.')
 
 if __name__ == '__main__':
