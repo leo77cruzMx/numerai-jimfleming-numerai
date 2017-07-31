@@ -21,9 +21,9 @@ class Model(object):
         cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=targets)
         self.loss = tf.reduce_mean(cross_entropy, name='loss')
         tf.contrib.layers.summarize_tensor(self.loss)
-        tf.contrib.losses.add_loss(self.loss)
+        tf.losses.add_loss(self.loss)
 
-        self.total_loss = tf.contrib.losses.get_total_loss(add_regularization_losses=True, name='total_loss')
+        self.total_loss = tf.losses.get_total_loss(add_regularization_losses=True, name='total_loss')
 
         # setup learning
         if is_training:

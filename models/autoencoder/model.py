@@ -78,9 +78,9 @@ class Model(object):
 
         self.loss = tf.reduce_mean(tf.squared_difference(features, reconstruction), name='loss')
         tf.contrib.layers.summarize_tensor(self.loss)
-        tf.contrib.losses.add_loss(self.loss)
+        tf.losses.add_loss(self.loss)
 
-        self.total_loss = tf.contrib.losses.get_total_loss(add_regularization_losses=True, name='total_loss')
+        self.total_loss = tf.losses.get_total_loss(add_regularization_losses=True, name='total_loss')
 
         # setup learning
         if is_training:

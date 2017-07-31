@@ -16,7 +16,7 @@ import tensorflow as tf
 tf.set_random_seed(67)
 
 from sklearn.utils import shuffle
-from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
 
 from tqdm import tqdm
 from model import Model
