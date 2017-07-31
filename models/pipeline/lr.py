@@ -16,7 +16,7 @@ from sklearn.decomposition import RandomizedPCA
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import log_loss
 from sklearn.pipeline import Pipeline, FeatureUnion, make_pipeline, make_union
-from sklearn.preprocessing import PolynomialFeatures, MinMaxScaler
+from sklearn.preprocessing import PolynomialFeatures, MinMaxScaler, StandardScaler
 from sklearn.feature_selection import SelectKBest
 from sklearn.ensemble import GradientBoostingClassifier, VotingClassifier
 from sklearn.manifold import Isomap
@@ -88,7 +88,7 @@ def main():
             ('X', ItemSelector('X')),
         ])),
         ('poly', PolynomialFeatures(degree=2)),
-        ('scaler', MinMaxScaler()),
+        ('scaler', StandardScaler()),
         ('lr', LogisticRegression(penalty='l2', C=1e-2, n_jobs=-1)),
     ])
 

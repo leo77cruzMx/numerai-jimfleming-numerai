@@ -88,7 +88,7 @@ def main():
             ('X', ItemSelector('X')),
         ])),
         ('poly', PolynomialFeatures(degree=2)),
-        ('scaler', MinMaxScaler()),
+        ('scaler', StandardScaler()),
         ('gbt', GradientBoostingClassifier()),
     ])
 

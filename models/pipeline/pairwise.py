@@ -19,7 +19,7 @@ from sklearn.feature_selection import SelectKBest
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import log_loss, roc_auc_score
 from sklearn.pipeline import make_pipeline, make_union, Pipeline, FeatureUnion
-from sklearn.preprocessing import PolynomialFeatures, MinMaxScaler
+from sklearn.preprocessing import PolynomialFeatures, MinMaxScaler, StandardScaler
 from sklearn.externals import joblib
 
 from transformers import ItemSelector
@@ -116,7 +116,7 @@ def main():
             ('tsne_3d_30p', ItemSelector('tsne_3d_30p')),
         ])),
         ('poly', PolynomialFeatures(degree=2)),
-        ('scaler', MinMaxScaler()),
+        ('scaler', StandardScaler()),
     ])
 
     X_train_concat = pipeline.fit_transform(X_train_concat, y_train)

@@ -19,7 +19,7 @@ from fastFM.als import FMClassification
 from sklearn.decomposition import RandomizedPCA
 from sklearn.metrics import log_loss
 from sklearn.pipeline import make_pipeline, FeatureUnion
-from sklearn.preprocessing import PolynomialFeatures, MinMaxScaler
+from sklearn.preprocessing import PolynomialFeatures, MinMaxScaler, StandardScaler
 from sklearn.pipeline import Pipeline, FeatureUnion, make_pipeline, make_union
 from sklearn.feature_selection import SelectKBest
 
