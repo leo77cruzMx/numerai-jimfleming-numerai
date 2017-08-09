@@ -78,8 +78,6 @@ def main():
     os.system('python3 /code/models/pipeline/pairwise.py')
     announce('Searching parameters')
     os.system('python3 /code/search_params.py')
-    announce('TPOT')
-    os.system('python3 /code/tpot_test.py')
     announce('Logistic Regression')
     os.system('python3 /code/models/pipeline/lr.py')
     announce('Factorization Machines')
@@ -88,6 +86,8 @@ def main():
     os.system('python3 /code/models/pipeline/gbt.py')
     announce('Ensemble')
     os.system('python3 /code/ensemble.py')
+    announce('TPOT')
+    os.system('python3 /code/tpot_test.py')
 
 if __name__ == '__main__':
     main()

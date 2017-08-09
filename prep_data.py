@@ -14,7 +14,7 @@ import pandas as pd
 
 from sklearn.metrics import roc_auc_score
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.cross_validation import StratifiedKFold
+from sklearn.model_selection import StratifiedKFold
 
 def main():
     df_train = pd.read_csv('/input/latest/numerai_training_data.csv')

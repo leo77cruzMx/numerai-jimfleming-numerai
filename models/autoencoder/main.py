@@ -46,26 +46,25 @@ def main(_):
     num_features = len(feature_cols)
     features = tf.placeholder(tf.float32, shape=[None, num_features], name='features')
 
-    with tf.variable_scope('model'):
+    with tf.variable_scope('autoencoder'):
         train_model = Model(features, denoise=FLAGS.denoise, is_training=True)
 
-    with tf.variable_scope('model', reuse=True):
+    with tf.variable_scope('autoencoder', reuse=True):
         test_model = Model(features, denoise=FLAGS.denoise, is_training=False)
 
     best = None
     wait = 0
     summary_op = tf.summary.merge_all()
-    logdir = 'logs/{}'.format(int(time.time()))
+    logdir = '/output/logs/autoencoder_{}'.format(int(time.time()))
     supervisor = tf.train.Supervisor(logdir=logdir, summary_op=None)
     with supervisor.managed_session() as sess:
-        summary_writer = tf.summary.FileWriter(logdir, graph=sess.graph)
+        summary_writer = tf.summary.FileWriter(logdir)
 
         print('Training model with {} parameters...'.format(train_model.num_parameters))
         with tqdm(total=FLAGS.num_epochs) as pbar:
             for epoch in range(FLAGS.num_epochs):
                 X_train_epoch = shuffle(X_train)
                 num_batches = len(X_train_epoch) // FLAGS.batch_size
-
 
                 losses = []
                 for batch_index in range(num_batches):
@@ -100,6 +99,8 @@ def main(_):
                     .format(epoch, loss_train, loss_valid, best, wait))
                 pbar.update()
 
+        summary_writer.add_graph(sess.graph)
+        summary_writer.flush()
         summary_writer.close()
 
         loss_valid = sess.run(test_model.loss, feed_dict={

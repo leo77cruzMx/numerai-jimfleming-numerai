@@ -79,20 +79,20 @@ def main(_):
     features_R = tf.placeholder(tf.float32, shape=[None, num_features], name='features_R')
     targets = tf.placeholder(tf.int32, shape=[None], name='targets')
 
-    with tf.variable_scope('model'):
+    with tf.variable_scope('pairwise'):
         train_model = Model(features_L, features_R, targets, is_training=True)
 
-    with tf.variable_scope('model', reuse=True):
+    with tf.variable_scope('pairwise', reuse=True):
         test_model = Model(features_L, features_R, targets, is_training=False)
 
     best = None
     wait = 0
 
     summary_op = tf.summary.merge_all()
-    logdir = 'logs/{}'.format(int(time.time()))
+    logdir = '/output/logs/pairwise_{}'.format(int(time.time()))
     supervisor = tf.train.Supervisor(logdir=logdir, summary_op=None)
     with supervisor.managed_session() as sess:
-        summary_writer = tf.summary.FileWriter(logdir, graph=sess.graph)
+        summary_writer = tf.summary.FileWriter(logdir)
 
         print('Training model with {} parameters...'.format(train_model.num_parameters))
         with tqdm(total=FLAGS.num_epochs) as pbar:
@@ -144,6 +144,8 @@ def main(_):
                     .format(epoch, loss_train, loss_valid, best, wait))
                 pbar.update()
 
+        summary_writer.add_graph(sess.graph)
+        summary_writer.flush()
         summary_writer.close()
 
         p_valid = sess.run(test_model.predictions, feed_dict={

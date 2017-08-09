@@ -45,17 +45,17 @@ def main(_):
     features = tf.placeholder(tf.float32, shape=[None, num_features], name='features')
     targets = tf.placeholder(tf.int32, shape=[None], name='targets')
 
-    with tf.variable_scope('model'):
+    with tf.variable_scope('adversarial'):
         train_model = Model(features, targets, is_training=True)
 
-    with tf.variable_scope('model', reuse=True):
+    with tf.variable_scope('adversarial', reuse=True):
         test_model = Model(features, targets, is_training=False)
 
     summary_op = tf.summary.merge_all()
-    logdir = 'logs/{}'.format(int(time.time()))
+    logdir = '/output/logs/adversarial_{}'.format(int(time.time()))
     supervisor = tf.train.Supervisor(logdir=logdir, summary_op=None)
     with supervisor.managed_session() as sess:
-        summary_writer = tf.summary.FileWriter(logdir, graph=sess.graph)
+        summary_writer = tf.summary.FileWriter(logdir)
 
         print('Training model with {} parameters...'.format(train_model.num_parameters))
         optimize_d, optimize_g = True, True
@@ -124,6 +124,8 @@ def main(_):
                 pbar.set_description('[{}] loss_train_d ({}): {:.8f}, loss_train_g ({}): {:.8f}'.format(epoch, optimize_d, loss_train_d, optimize_g, loss_train_g))
                 pbar.update()
 
+        summary_writer.add_graph(sess.graph)
+        summary_writer.flush()
         summary_writer.close()
 
         loss_valid_d, loss_valid_g, summary_str = sess.run([

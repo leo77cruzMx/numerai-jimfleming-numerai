@@ -27,3 +27,27 @@ Folder structure:
 ```
 docker build -t app . && docker run --name app --rm -v $PWD/input:/input -v $PWD/output:/output app
 ```
+
+# TensorFlow code diffs
+
+Refer to the [Neural Network Zoo](http://www.asimovinstitute.org/neural-network-zoo/)
+
+Classifier vs. Autoencoder:
+* [main.py](http://www.mergely.com/editor?sb=0&lhs=https://raw.githubusercontent.com/altermarkive/Resurrecting-JimFleming-Numerai/master/models/classifier/main.py&rhs=https://raw.githubusercontent.com/altermarkive/Resurrecting-JimFleming-Numerai/master/models/autoencoder/main.py)
+* [model.py](http://www.mergely.com/editor?sb=0&lhs=https://raw.githubusercontent.com/altermarkive/Resurrecting-JimFleming-Numerai/master/models/classifier/model.py&rhs=https://raw.githubusercontent.com/altermarkive/Resurrecting-JimFleming-Numerai/master/models/autoencoder/model.py)
+
+Classifier vs. Adversarial:
+* [main.py](http://www.mergely.com/editor?sb=0&lhs=https://raw.githubusercontent.com/altermarkive/Resurrecting-JimFleming-Numerai/master/models/classifier/main.py&rhs=https://raw.githubusercontent.com/altermarkive/Resurrecting-JimFleming-Numerai/master/models/adversarial/main.py)
+* [model.py](http://www.mergely.com/editor?sb=0&lhs=https://raw.githubusercontent.com/altermarkive/Resurrecting-JimFleming-Numerai/master/models/classifier/model.py&rhs=https://raw.githubusercontent.com/altermarkive/Resurrecting-JimFleming-Numerai/master/models/adversarial/model.py)
+
+Classifier vs. Pairwise:
+* [main.py](http://www.mergely.com/editor?sb=0&lhs=https://raw.githubusercontent.com/altermarkive/Resurrecting-JimFleming-Numerai/master/models/classifier/main.py&rhs=https://raw.githubusercontent.com/altermarkive/Resurrecting-JimFleming-Numerai/master/models/pairwise/main.py)
+* [model.py](http://www.mergely.com/editor?sb=0&lhs=https://raw.githubusercontent.com/altermarkive/Resurrecting-JimFleming-Numerai/master/models/classifier/model.py&rhs=https://raw.githubusercontent.com/altermarkive/Resurrecting-JimFleming-Numerai/master/models/pairwise/model.py)
+
+# TensorBoard
+
+To launch TensorBoard run:
+
+```
+docker run -it -p 6006:6006 -v $PWD/output/logs:/tmp/logs tensorflow/tensorflow tensorboard --logdir /tmp/logs
+```

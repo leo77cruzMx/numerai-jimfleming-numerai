@@ -41,8 +41,8 @@ class Model(object):
             optimizer_d = tf.train.AdamOptimizer(learning_rate=1e-4)
             optimizer_g = tf.train.AdamOptimizer(learning_rate=1e-4)
 
-            tvars_d = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'model/discriminator')
-            tvars_g = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'model/generator')
+            tvars_d = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'adversarial/discriminator')
+            tvars_g = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'adversarial/generator')
 
             regularizer = tf.contrib.layers.l2_regularizer(1e-3)
             reg_d = tf.contrib.layers.apply_regularization(regularizer, weights_list=tvars_d)
