@@ -17,18 +17,6 @@ paths = [
     glob.glob('/output/predictions*.pairwise.csv')[0]
 ]
 
-# paths = [
-#     glob.glob('/output/predictions*.auto-sklearn.csv')[0],
-#     glob.glob('/output/predictions*.tpot.csv')[0],
-#     glob.glob('/output/predictions*.simple.csv')[0],
-#     glob.glob('/output/predictions*.lr.csv')[0],
-#     glob.glob('/output/predictions*.fm.csv')[0],
-#     glob.glob('/output/predictions*.tf_pairwise.csv')[0],
-#     glob.glob('/output/predictions*.tf_classifier.csv')[0],
-#     glob.glob('/output/predictions*.gbt.csv')[0],
-#     glob.glob('/output/predictions*.pairwise.csv')[0]
-# ]
-
 def main():
     t_id = []
     probs = []

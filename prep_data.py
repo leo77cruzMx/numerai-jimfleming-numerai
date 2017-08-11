@@ -37,8 +37,8 @@ def main():
     rf = RandomForestClassifier(n_estimators=100, n_jobs=-1, random_state=67)
     predictions = np.zeros(y_split.shape)
 
-    kfold = StratifiedKFold(y_split, n_folds=5, shuffle=True, random_state=67)
-    for i, (train_i, test_i) in enumerate(kfold):
+    kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=67)
+    for i, (train_i, test_i) in enumerate(kfold.split(X_split, y_split)):
         print("Fold #{}".format(i + 1))
 
         X_split_train = X_split.iloc[train_i]
