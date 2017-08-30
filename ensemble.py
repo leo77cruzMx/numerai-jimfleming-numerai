@@ -8,13 +8,13 @@ import numpy as np
 import pandas as pd
 
 paths = [
-    # glob.glob('/output/predictions*.simple.csv')[0],
-    glob.glob('/output/predictions*.lr.csv')[0],
-    glob.glob('/output/predictions*.fm.csv')[0],
-    # glob.glob('/output/predictions*.tf_pairwise.csv')[0],
-    # glob.glob('/output/predictions*.tf_classifier.csv')[0],
-    glob.glob('/output/predictions*.gbt.csv')[0],
-    glob.glob('/output/predictions*.pairwise.csv')[0]
+    # glob.glob('/workspace/output/predictions*.simple.csv')[0],
+    glob.glob('/workspace/output/predictions*.lr.csv')[0],
+    glob.glob('/workspace/output/predictions*.fm.csv')[0],
+    # glob.glob('/workspace/output/predictions*.tf_pairwise.csv')[0],
+    # glob.glob('/workspace/output/predictions*.tf_classifier.csv')[0],
+    glob.glob('/workspace/output/predictions*.gbt.csv')[0],
+    glob.glob('/workspace/output/predictions*.pairwise.csv')[0]
 ]
 
 def main():
@@ -32,7 +32,7 @@ def main():
         'id': t_id,
         'probability': probability,
     })
-    csv_path = '/output/predictions_ensemble_{}.csv'.format(int(time.time()))
+    csv_path = '/workspace/output/predictions_ensemble_{}.csv'.format(int(time.time()))
     df_pred.to_csv(csv_path, columns=('id', 'probability'), index=None)
     print('Saved: {}'.format(csv_path))
 

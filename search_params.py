@@ -14,8 +14,8 @@ def build_pipeline(portion):
     return pipeline.Pipeline([('poly', preprocessing.PolynomialFeatures(degree=2)), ('pca', decomposition.PCA()), ('logisticregression', linear_model.LogisticRegression())])
 
 def main():
-    df_train = pd.read_csv('/input/latest/train_data.csv')
-    df_valid = pd.read_csv('/input/latest/valid_data.csv')
+    df_train = pd.read_csv('/workspace/output/train_data.csv')
+    df_valid = pd.read_csv('/workspace/output/valid_data.csv')
 
     feature_cols = list(df_train.columns[:-1])
     target_col = df_train.columns[-1]
@@ -26,7 +26,7 @@ def main():
     X_valid = df_valid[feature_cols].values
     y_valid = df_valid[target_col].values
 
-    tsne_data = np.load('/output/tsne.npz')
+    tsne_data = np.load('/workspace/output/tsne.npz')
     X_train_tsne = tsne_data['X_train']
     X_valid_tsne = tsne_data['X_valid']
 

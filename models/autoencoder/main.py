@@ -33,9 +33,9 @@ else:
     print('NOT denoising!')
 
 def main(_):
-    df_train = pd.read_csv('/input/latest/train_data.csv')
-    df_valid = pd.read_csv('/input/latest/valid_data.csv')
-    df_test = pd.read_csv('/input/latest/test_data.csv')
+    df_train = pd.read_csv('/workspace/output/train_data.csv')
+    df_valid = pd.read_csv('/workspace/output/valid_data.csv')
+    df_test = pd.read_csv('/workspace/output/test_data.csv')
 
     feature_cols = list(df_train.columns)[:-1]
 
@@ -55,7 +55,7 @@ def main(_):
     best = None
     wait = 0
     summary_op = tf.summary.merge_all()
-    logdir = '/output/logs/autoencoder_{}'.format(int(time.time()))
+    logdir = '/workspace/output/logs/autoencoder_{}'.format(int(time.time()))
     supervisor = tf.train.Supervisor(logdir=logdir, summary_op=None)
     with supervisor.managed_session() as sess:
         summary_writer = tf.summary.FileWriter(logdir)
@@ -113,9 +113,9 @@ def main(_):
         z_test = sess.run(test_model.z, feed_dict={ features: X_test })
 
         if FLAGS.denoise:
-            np.savez('/output/denoising.npz', z_train=z_train, z_valid=z_valid, z_test=z_test)
+            np.savez('/workspace/output/denoising.npz', z_train=z_train, z_valid=z_valid, z_test=z_test)
         else:
-            np.savez('/output/autoencoder.npz', z_train=z_train, z_valid=z_valid, z_test=z_test)
+            np.savez('/workspace/output/autoencoder.npz', z_train=z_train, z_valid=z_valid, z_test=z_test)
 
 if __name__ == "__main__":
     tf.app.run()

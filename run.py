@@ -6,23 +6,23 @@ import numpy as np
 
 def merge_tsne(selection):
     each = []
-    each.append(np.load('/output/tsne_2d_5p.npz'))
-    each.append(np.load('/output/tsne_2d_10p.npz'))
-    each.append(np.load('/output/tsne_2d_15p.npz'))
-    each.append(np.load('/output/tsne_2d_30p.npz'))
-    each.append(np.load('/output/tsne_2d_50p.npz'))
-    each.append(np.load('/output/tsne_3d_30p.npz'))
-    each.append(np.load('/output/tsne_2d_5p_poly.npz'))
-    each.append(np.load('/output/tsne_2d_10p_poly.npz'))
-    each.append(np.load('/output/tsne_2d_15p_poly.npz'))
-    each.append(np.load('/output/tsne_2d_30p_poly.npz'))
-    each.append(np.load('/output/tsne_2d_50p_poly.npz'))
-    each.append(np.load('/output/tsne_3d_30p.npz'))
+    each.append(np.load('/workspace/output/tsne_2d_5p.npz'))
+    each.append(np.load('/workspace/output/tsne_2d_10p.npz'))
+    each.append(np.load('/workspace/output/tsne_2d_15p.npz'))
+    each.append(np.load('/workspace/output/tsne_2d_30p.npz'))
+    each.append(np.load('/workspace/output/tsne_2d_50p.npz'))
+    each.append(np.load('/workspace/output/tsne_3d_30p.npz'))
+    each.append(np.load('/workspace/output/tsne_2d_5p_poly.npz'))
+    each.append(np.load('/workspace/output/tsne_2d_10p_poly.npz'))
+    each.append(np.load('/workspace/output/tsne_2d_15p_poly.npz'))
+    each.append(np.load('/workspace/output/tsne_2d_30p_poly.npz'))
+    each.append(np.load('/workspace/output/tsne_2d_50p_poly.npz'))
+    each.append(np.load('/workspace/output/tsne_3d_30p.npz'))
     selected = [each[i] for i in selection]
     X_train = np.concatenate([item['train'] for item in selected], axis=1)
     X_valid = np.concatenate([item['valid'] for item in selected], axis=1)
     X_test = np.concatenate([item['test'] for item in selected], axis=1)
-    np.savez('/output/tsne.npz', X_train=X_train, X_valid=X_valid, X_test=X_test)
+    np.savez('/workspace/output/tsne.npz', X_train=X_train, X_valid=X_valid, X_test=X_test)
 
 def announce(text):
     sys.stdout.write('{}\n'.format('-' * 80))
@@ -31,9 +31,9 @@ def announce(text):
     sys.stdout.flush()
 
 def main():
-    os.system('curl -sL https://raw.githubusercontent.com/altermarkive/Numerai-Tournament-Data-Sets/master/load.sh | bash -s -- /input')
+    os.system('curl -sL https://raw.githubusercontent.com/altermarkive/Numerai-Tournament-Data-Sets/master/load.sh | bash -s -- /workspace/input')
     try:
-        os.mkdir('/output')
+        os.mkdir('/workspace/output')
     except:
         pass
     announce('Data Preparation')
@@ -42,18 +42,18 @@ def main():
     os.system('python3 /code/models/pipeline/simple.py')
     announce('t-SNE')
     os.system('python3 /code/fit_tsne.py')
-    os.rename('/output/tsne_3d_30p.npz', '/output/tsne_3d_30p_tsne.npz')
+    os.rename('/workspace/output/tsne_3d_30p.npz', '/workspace/output/tsne_3d_30p_tsne.npz')
     announce('t-SNE C')
     os.system('python3 /code/bh_tsne/prep_data.py')
     os.system('/code/bh_tsne/bh_tsne')
     os.system('python3 /code/bh_tsne/prep_result.py')
-    os.rename('/output/tsne_3d_30p.npz', '/output/tsne_3d_30p_bhtsne.npz')
+    os.rename('/workspace/output/tsne_3d_30p.npz', '/workspace/output/tsne_3d_30p_bhtsne.npz')
     announce('t-SNE selection')
     try:
-        os.remove('/output/tsne_3d_30p.npz')
+        os.remove('/workspace/output/tsne_3d_30p.npz')
     except:
         pass
-    shutil.copyfile('/output/tsne_3d_30p_bhtsne.npz', '/output/tsne_3d_30p.npz')
+    shutil.copyfile('/workspace/output/tsne_3d_30p_bhtsne.npz', '/workspace/output/tsne_3d_30p.npz')
     announce('TF NN')
     os.system('python3 /code/models/classifier/main.py')
     announce('Basic data visualization notebook')

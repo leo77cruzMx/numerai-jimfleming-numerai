@@ -25,7 +25,7 @@ Folder structure:
 # Running in a container
 
 ```
-docker build -t app . && docker run --name app --rm -v $PWD/input:/input -v $PWD/output:/output app
+docker build -t app . && docker run --name app --rm -v $PWD/workspace:/workspace app
 ```
 
 # TensorFlow code diffs
@@ -49,5 +49,5 @@ Classifier vs. Pairwise:
 To launch TensorBoard run:
 
 ```
-docker run -it -p 6006:6006 -v $PWD/output/logs:/tmp/logs tensorflow/tensorflow tensorboard --logdir /tmp/logs
+docker run -it -p 6006:6006 -v $PWD/workspace/output/logs:/tmp/logs tensorflow/tensorflow tensorboard --logdir /tmp/logs
 ```
