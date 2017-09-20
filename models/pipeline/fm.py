@@ -25,11 +25,13 @@ from sklearn.feature_selection import SelectKBest
 
 from transformers import ItemSelector
 
+import os
+
 def main():
     # load data
-    df_train = pd.read_csv('/workspace/output/train_data.csv')
-    df_valid = pd.read_csv('/workspace/output/valid_data.csv')
-    df_test = pd.read_csv('/workspace/output/test_data.csv')
+    df_train = pd.read_csv(os.getenv('TRAINING', '/workspace/output/train_data.csv'))
+    df_valid = pd.read_csv(os.getenv('VALIDATING', '/workspace/output/valid_data.csv'))
+    df_test = pd.read_csv(os.getenv('TESTING', '/workspace/output/test_data.csv'))
 
     feature_cols = list(df_train.columns[:-1])
     target_col = df_train.columns[-1]
@@ -44,12 +46,13 @@ def main():
 
     X_test = df_test[feature_cols].values
 
-    tsne_data_2d_5p = np.load('/workspace/output/tsne_2d_5p.npz')
-    tsne_data_2d_10p = np.load('/workspace/output/tsne_2d_10p.npz')
-    tsne_data_2d_15p = np.load('/workspace/output/tsne_2d_15p.npz')
-    tsne_data_2d_30p = np.load('/workspace/output/tsne_2d_30p.npz')
-    tsne_data_2d_50p = np.load('/workspace/output/tsne_2d_50p.npz')
-    tsne_data_3d_30p = np.load('/workspace/output/tsne_3d_30p.npz')
+    prefix = os.getenv('PREFIX', '/workspace/output/')
+    tsne_data_2d_5p = np.load('{}tsne_2d_5p.npz'.format(prefix))
+    tsne_data_2d_10p = np.load('{}tsne_2d_10p.npz'.format(prefix))
+    tsne_data_2d_15p = np.load('{}tsne_2d_15p.npz'.format(prefix))
+    tsne_data_2d_30p = np.load('{}tsne_2d_30p.npz'.format(prefix))
+    tsne_data_2d_50p = np.load('{}tsne_2d_50p.npz'.format(prefix))
+    tsne_data_3d_30p = np.load('{}tsne_3d_30p.npz'.format(prefix))
 
     # concat features
     X_train_concat = {
@@ -111,7 +114,7 @@ def main():
         'id': df_test['id'],
         'probability': p_test
     })
-    csv_path = '/workspace/output/predictions_{}.fm.csv'.format(loss)
+    csv_path = os.getenv('PREDICTING', '/workspace/output/predictions_{}.fm.csv'.format(loss))
     df_pred.to_csv(csv_path, columns=('id', 'probability'), index=None)
     print('Saved: {}'.format(csv_path))
 

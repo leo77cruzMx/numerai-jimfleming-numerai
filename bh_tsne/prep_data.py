@@ -1,10 +1,11 @@
 import struct
 import numpy as np
 import pandas as pd
+import os
 
-df_train = pd.read_csv('/workspace/output/train_data.csv')
-df_valid = pd.read_csv('/workspace/output/valid_data.csv')
-df_test = pd.read_csv('/workspace/output/test_data.csv')
+df_train = pd.read_csv(os.getenv('TRAINING', '/workspace/output/train_data.csv'))
+df_valid = pd.read_csv(os.getenv('VALIDATING', '/workspace/output/valid_data.csv'))
+df_test = pd.read_csv(os.getenv('TESTING', '/workspace/output/test_data.csv'))
 
 feature_cols = list(df_train.columns[:-1])
 target_col = df_train.columns[-1]

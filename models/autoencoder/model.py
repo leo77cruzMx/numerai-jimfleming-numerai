@@ -7,7 +7,8 @@ import tensorflow as tf
 
 class Model(object):
 
-    def __init__(self, features, denoise, is_training):
+    def __init__(self, num_features, features, denoise, is_training):
+        self.num_features = num_features
         sigmoid_init = tf.contrib.layers.variance_scaling_initializer(factor=1.0, mode='FAN_IN')
         weights_reg = tf.contrib.layers.l2_regularizer(1e-3)
 
@@ -69,7 +70,7 @@ class Model(object):
 
         reconstruction = tf.contrib.layers.fully_connected(
             inputs=h4,
-            num_outputs=21,
+            num_outputs=self.num_features,
             activation_fn=tf.sigmoid,
             weights_initializer=sigmoid_init,
             weights_regularizer=weights_reg,

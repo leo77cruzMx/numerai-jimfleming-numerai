@@ -47,10 +47,10 @@ def main(_):
     features = tf.placeholder(tf.float32, shape=[None, num_features], name='features')
 
     with tf.variable_scope('autoencoder'):
-        train_model = Model(features, denoise=FLAGS.denoise, is_training=True)
+        train_model = Model(num_features, features, denoise=FLAGS.denoise, is_training=True)
 
     with tf.variable_scope('autoencoder', reuse=True):
-        test_model = Model(features, denoise=FLAGS.denoise, is_training=False)
+        test_model = Model(num_features, features, denoise=FLAGS.denoise, is_training=False)
 
     best = None
     wait = 0

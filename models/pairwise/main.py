@@ -21,6 +21,8 @@ from sklearn.metrics import log_loss, roc_auc_score
 from tqdm import tqdm, trange
 from model import Model
 
+import os
+
 FLAGS = tf.app.flags.FLAGS
 
 tf.app.flags.DEFINE_integer('num_epochs', 15, "")
@@ -48,9 +50,9 @@ def divide_samples(X, y):
     return shuffle(X_L, X_R, y_both)
 
 def main(_):
-    df_train = pd.read_csv('/workspace/output/train_data.csv')
-    df_valid = pd.read_csv('/workspace/output/valid_data.csv')
-    df_test = pd.read_csv('/workspace/output/test_data.csv')
+    df_train = pd.read_csv(os.getenv('TRAINING', '/workspace/output/train_data.csv'))
+    df_valid = pd.read_csv(os.getenv('VALIDATING', '/workspace/output/valid_data.csv'))
+    df_test = pd.read_csv(os.getenv('TESTING', '/workspace/output/test_data.csv'))
 
     feature_cols = list(df_train.columns[:-1])
     target_col = df_train.columns[-1]
@@ -63,7 +65,8 @@ def main(_):
 
     X_test = df_test[feature_cols].values
 
-    tsne_data = np.load('/workspace/output/tsne.npz')
+    prefix = os.getenv('PREFIX', '/workspace/output/')
+    tsne_data = np.load('{}tsne.npz'.format(prefix))
     tsne_train = tsne_data['X_train']
     tsne_valid = tsne_data['X_valid']
     tsne_test = tsne_data['X_test']
@@ -89,7 +92,7 @@ def main(_):
     wait = 0
 
     summary_op = tf.summary.merge_all()
-    logdir = '/workspace/output/logs/pairwise_{}'.format(int(time.time()))
+    logdir = '{}logs/pairwise_{}'.format(prefix, int(time.time()))
     supervisor = tf.train.Supervisor(logdir=logdir, summary_op=None)
     with supervisor.managed_session() as sess:
         summary_writer = tf.summary.FileWriter(logdir)
@@ -186,7 +189,7 @@ def main(_):
             'id': df_test['id'],
             'probability': p_test[:,1]
         })
-        csv_path = '/workspace/output/predictions_{}.tf_pairwise.csv'.format(loss)
+        csv_path = os.getenv('PREDICTING', '/workspace/output/predictions_{}.tf_pairwise.csv'.format(loss))
         df_pred.to_csv(csv_path, columns=('id', 'probability'), index=None)
         print('Saved: {}'.format(csv_path))
 

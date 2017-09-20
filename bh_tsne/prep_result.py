@@ -1,10 +1,11 @@
 import struct
 import numpy as np
 import pandas as pd
+import os
 
-df_train = pd.read_csv('/workspace/output/train_data.csv')
-df_valid = pd.read_csv('/workspace/output/valid_data.csv')
-df_test = pd.read_csv('/workspace/output/test_data.csv')
+df_train = pd.read_csv(os.getenv('TRAINING', '/workspace/output/train_data.csv'))
+df_valid = pd.read_csv(os.getenv('VALIDATING', '/workspace/output/valid_data.csv'))
+df_test = pd.read_csv(os.getenv('TESTING', '/workspace/output/test_data.csv'))
 
 with open('result.dat', 'rb') as f:
     N, = struct.unpack('i', f.read(4))
@@ -23,7 +24,8 @@ with open('result.dat', 'rb') as f:
     assert(len(tsne_valid) == len(df_valid))
     assert(len(tsne_test) == len(df_test))
 
-    save_path = '/workspace/output/tsne_{}d_30p.npz'.format(no_dims)
+    prefix = os.getenv('PREFIX', '/workspace/output/')
+    save_path = '{}tsne_{}d_30p.npz'.format(prefix, no_dims)
     np.savez(save_path, train=tsne_train, valid=tsne_valid, test=tsne_test)
     print('Saved: {}'.format(save_path))
 

@@ -5,17 +5,22 @@ from __future__ import division
 import glob
 import time
 import numpy as np
+import os
 import pandas as pd
 
-paths = [
-    # glob.glob('/workspace/output/predictions*.simple.csv')[0],
-    glob.glob('/workspace/output/predictions*.lr.csv')[0],
-    glob.glob('/workspace/output/predictions*.fm.csv')[0],
-    # glob.glob('/workspace/output/predictions*.tf_pairwise.csv')[0],
-    # glob.glob('/workspace/output/predictions*.tf_classifier.csv')[0],
-    glob.glob('/workspace/output/predictions*.gbt.csv')[0],
-    glob.glob('/workspace/output/predictions*.pairwise.csv')[0]
-]
+paths = os.getenv('ENSEMBLING', None)
+if None == paths:
+    paths = [
+        # glob.glob('/workspace/output/predictions*.simple.csv')[0],
+        glob.glob('/workspace/output/predictions*.lr.csv')[0],
+        glob.glob('/workspace/output/predictions*.fm.csv')[0],
+        # glob.glob('/workspace/output/predictions*.tf_pairwise.csv')[0],
+        # glob.glob('/workspace/output/predictions*.tf_classifier.csv')[0],
+        glob.glob('/workspace/output/predictions*.gbt.csv')[0],
+        glob.glob('/workspace/output/predictions*.pairwise.csv')[0]
+    ]
+else:
+    paths = paths.split(':')
 
 def main():
     t_id = []
@@ -32,7 +37,7 @@ def main():
         'id': t_id,
         'probability': probability,
     })
-    csv_path = '/workspace/output/predictions_ensemble_{}.csv'.format(int(time.time()))
+    csv_path = os.getenv('PREDICTING', '/workspace/output/predictions_ensemble_{}.csv'.format(int(time.time())))
     df_pred.to_csv(csv_path, columns=('id', 'probability'), index=None)
     print('Saved: {}'.format(csv_path))
 

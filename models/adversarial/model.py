@@ -7,7 +7,8 @@ import tensorflow as tf
 
 class Model(object):
 
-    def __init__(self, features, targets, is_training):
+    def __init__(self, num_features, features, targets, is_training):
+        self.num_features = num_features
         batch_size = tf.shape(targets)[0]
 
         z = tf.random_normal([batch_size, 10], mean=0.0, stddev=1.0, dtype=tf.float32, name='z')
@@ -132,7 +133,7 @@ class Model(object):
             normalizer_params=normalizer_params)
         h3 = tf.contrib.layers.fully_connected(
             inputs=h2,
-            num_outputs=21,
+            num_outputs=self.num_features,
             activation_fn=tf.sigmoid,
             weights_initializer=sigmoid_init,
             weights_regularizer=weights_reg,

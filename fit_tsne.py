@@ -15,10 +15,17 @@ import pandas as pd
 from tsne import bh_sne
 from sklearn.preprocessing import PolynomialFeatures
 
+import os
+import multiprocessing
+import queue
+import threading
+import traceback
+
 def save_tsne(perplexity, dimensions=2, polynomial=False):
-    df_train = pd.read_csv('/workspace/output/train_data.csv')
-    df_valid = pd.read_csv('/workspace/output/valid_data.csv')
-    df_test = pd.read_csv('/workspace/output/test_data.csv')
+    prefix = os.getenv('PREFIX', '/workspace/output/')
+    df_train = pd.read_csv(os.getenv('TRAINING', '/workspace/output/train_data.csv'))
+    df_valid = pd.read_csv(os.getenv('VALIDATING', '/workspace/output/valid_data.csv'))
+    df_test = pd.read_csv(os.getenv('TESTING', '/workspace/output/test_data.csv'))
 
     feature_cols = list(df_train.columns[:-1])
     target_col = df_train.columns[-1]
@@ -52,9 +59,9 @@ def save_tsne(perplexity, dimensions=2, polynomial=False):
     assert(len(tsne_test) == len(X_test))
 
     if polynomial:
-        save_path = '/workspace/output/tsne_{}d_{}p_poly.npz'.format(dimensions, perplexity)
+        save_path = '{}tsne_{}d_{}p_poly.npz'.format(prefix, dimensions, perplexity)
     else:
-        save_path = '/workspace/output/tsne_{}d_{}p.npz'.format(dimensions, perplexity)
+        save_path = '{}tsne_{}d_{}p.npz'.format(prefix, dimensions, perplexity)
 
     np.savez(save_path, \
         train=tsne_train, \
@@ -62,12 +69,38 @@ def save_tsne(perplexity, dimensions=2, polynomial=False):
         test=tsne_test)
     print('Saved: {}'.format(save_path))
 
+class Worker(threading.Thread):
+    def __init__(self, tasks):
+        threading.Thread.__init__(self)
+        self.daemon = True
+        self.tasks = tasks
+
+    def run(self):
+        while True:
+            perplexity, polynomial, dimensions = self.tasks.get()
+            try:
+                save_tsne(perplexity, polynomial=polynomial, dimensions=dimensions)
+            except:
+                traceback.print_exc()
+            finally:
+                self.tasks.task_done()
+
 def main():
-    for perplexity in [5, 10, 15, 30, 50]: #[5, 10, 15, 20, 30, 40, 50]:
-        save_tsne(perplexity)
-    for perplexity in [5, 10, 15, 30, 50]: #[5, 10, 15, 20, 30, 40, 50]:
-        save_tsne(perplexity, polynomial=True)
-    save_tsne(30, dimensions=3)
+    try:
+        definitions = [
+            (5, False, 2), (10, False, 2), (15, False, 2), (30, False, 2), (50, False, 2),
+            (5, True, 2), (10, True, 2), (15, True, 2), (30, True, 2), (50, True, 2),
+            (30, False, 3)
+        ]
+        count = multiprocessing.cpu_count()
+        tasks = queue.Queue(count)
+        for _ in range(count):
+            Worker(tasks).start()
+        for definition in definitions:
+            tasks.put(definition)
+        tasks.join()
+    except:
+        traceback.print_exc()
 
 if __name__ == '__main__':
     main()

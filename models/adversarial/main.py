@@ -46,10 +46,10 @@ def main(_):
     targets = tf.placeholder(tf.int32, shape=[None], name='targets')
 
     with tf.variable_scope('adversarial'):
-        train_model = Model(features, targets, is_training=True)
+        train_model = Model(num_features, features, targets, is_training=True)
 
     with tf.variable_scope('adversarial', reuse=True):
-        test_model = Model(features, targets, is_training=False)
+        test_model = Model(num_features, features, targets, is_training=False)
 
     summary_op = tf.summary.merge_all()
     logdir = '/workspace/output/logs/adversarial_{}'.format(int(time.time()))
