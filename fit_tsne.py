@@ -20,6 +20,7 @@ import multiprocessing
 import queue
 import threading
 import traceback
+import sys
 
 def save_tsne(perplexity, dimensions=2, polynomial=False):
     prefix = os.getenv('PREFIX', '/workspace/output/')
@@ -78,27 +79,29 @@ class Worker(threading.Thread):
     def run(self):
         while True:
             perplexity, polynomial, dimensions = self.tasks.get()
-            try:
-                save_tsne(perplexity, polynomial=polynomial, dimensions=dimensions)
-            except:
-                traceback.print_exc()
-            finally:
-                self.tasks.task_done()
+            os.system('python3 {} {} {} {}'.format(__file__, perplexity, polynomial, dimensions))
+            self.tasks.task_done()
 
 def main():
     try:
-        definitions = [
-            (5, False, 2), (10, False, 2), (15, False, 2), (30, False, 2), (50, False, 2),
-            (5, True, 2), (10, True, 2), (15, True, 2), (30, True, 2), (50, True, 2),
-            (30, False, 3)
-        ]
-        count = multiprocessing.cpu_count()
-        tasks = queue.Queue(count)
-        for _ in range(count):
-            Worker(tasks).start()
-        for definition in definitions:
-            tasks.put(definition)
-        tasks.join()
+        if len(sys.argv) < 4:
+            definitions = [
+                (5, False, 2), (10, False, 2), (15, False, 2), (30, False, 2), (50, False, 2),
+                (5, True, 2), (10, True, 2), (15, True, 2), (30, True, 2), (50, True, 2),
+                (30, False, 3)
+            ]
+            count = multiprocessing.cpu_count()
+            tasks = queue.Queue(count)
+            for _ in range(count):
+                Worker(tasks).start()
+            for definition in definitions:
+                tasks.put(definition)
+            tasks.join()
+        else:
+            perplexity = int(sys.argv[1])
+            polynomial = bool(sys.argv[2])
+            dimensions = int(sys.argv[3])
+            save_tsne(perplexity, polynomial=polynomial, dimensions=dimensions)
     except:
         traceback.print_exc()
 
