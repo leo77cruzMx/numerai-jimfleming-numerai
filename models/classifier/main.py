@@ -45,11 +45,11 @@ def main(_):
     X_test = df_test[feature_cols].values
 
     prefix = os.getenv('PREFIX', '/workspace/output/')
-    tsne_data_2d_5p = np.load('{}tsne_2d_5p_poly.npz'.format(prefix))
-    tsne_data_2d_15p = np.load('{}tsne_2d_15p_poly.npz'.format(prefix))
-    tsne_data_2d_10p = np.load('{}tsne_2d_10p_poly.npz'.format(prefix))
-    tsne_data_2d_30p = np.load('{}tsne_2d_30p_poly.npz'.format(prefix))
-    tsne_data_2d_50p = np.load('{}tsne_2d_50p_poly.npz'.format(prefix))
+    tsne_data_5 = np.load('{}tsne_2d_5p_poly.npz'.format(prefix))
+    tsne_data_15 = np.load('{}tsne_2d_15p_poly.npz'.format(prefix))
+    tsne_data_10 = np.load('{}tsne_2d_10p_poly.npz'.format(prefix))
+    tsne_data_30 = np.load('{}tsne_2d_30p_poly.npz'.format(prefix))
+    tsne_data_50 = np.load('{}tsne_2d_50p_poly.npz'.format(prefix))
 
     X_train_concat = np.concatenate([
         X_train,
