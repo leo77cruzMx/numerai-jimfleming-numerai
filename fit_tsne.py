@@ -22,6 +22,14 @@ import threading
 import traceback
 import sys
 
+
+def locate(prefix, perplexity, polynomial, dimensions):
+    if polynomial:
+        location = '{}tsne_{}d_{}p_poly.npz'.format(prefix, dimensions, perplexity)
+    else:
+        location = '{}tsne_{}d_{}p.npz'.format(prefix, dimensions, perplexity)
+    return location
+
 def save_tsne(perplexity, dimensions=2, polynomial=False):
     prefix = os.getenv('PREFIX', '/workspace/output/')
     df_train = pd.read_csv(os.getenv('TRAINING', '/workspace/output/train_data.csv'))
@@ -73,14 +81,6 @@ def save_tsne(perplexity, dimensions=2, polynomial=False):
     sys.stdout.write('Saved: {}\n'.format(save_path))
     sys.stdout.flush()
 
-def locate(prefix, perplexity, polynomial, dimensions):
-    if polynomial:
-        location = '{}tsne_{}d_{}p_poly.npz'.format(prefix, dimensions, perplexity)
-    else:
-        location = '{}tsne_{}d_{}p.npz'.format(prefix, dimensions, perplexity)
-    return location
-
-
 class Worker(threading.Thread):
     def __init__(self, tasks):
         threading.Thread.__init__(self)
@@ -91,16 +91,16 @@ class Worker(threading.Thread):
         prefix = os.getenv('PREFIX', '/workspace/output/')
         while True:
             perplexity, polynomial, dimensions = self.tasks.get()
-            locate = location(prefix, perplexity, polynomial, dimensions)
+            location = locate(prefix, perplexity, polynomial, dimensions)
             delay = 450
             while True:
-                sys.stdout.write('Generating {}\n'.format(locate))
+                sys.stdout.write('Generating {}\n'.format(location))
                 sys.stdout.flush()
                 os.system('python3 {} {} {} {}'.format(__file__, perplexity, polynomial, dimensions))
                 if os.path.isfile(location):
                     break
                 else:
-                    sys.stdout.write('File {} missing, backing off\n'.format(locate))
+                    sys.stdout.write('File {} missing, backing off\n'.format(location))
                     sys.stdout.flush()
                     time.sleep(delay)
                 if delay < 3600:
@@ -115,7 +115,11 @@ def main():
                 (5, True, 2), (10, True, 2), (15, True, 2), (30, True, 2), (50, True, 2),
                 (30, False, 3)
             ]
-            count = multiprocessing.cpu_count()
+            count = int(os.environ.get('PARALLEL', multiprocessing.cpu_count() - 1))
+            if count <= 0:
+                count = 1
+            sys.stdout.write('Parallel count: {}\n'.format(count))
+            sys.stdout.flush()
             tasks = queue.Queue(count)
             for _ in range(count):
                 Worker(tasks).start()
@@ -132,4 +136,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
