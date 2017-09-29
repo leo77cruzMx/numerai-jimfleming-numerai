@@ -96,7 +96,7 @@ class Worker(threading.Thread):
             while True:
                 sys.stdout.write('Generating {}\n'.format(location))
                 sys.stdout.flush()
-                os.system('python3 {} {} {} {}'.format(__file__, perplexity, polynomial, dimensions))
+                os.system('python3 {} {} {} {}'.format(__file__, perplexity, 1 if polynomial else 0, dimensions))
                 if os.path.isfile(location):
                     break
                 else:
@@ -128,7 +128,7 @@ def main():
             tasks.join()
         else:
             perplexity = int(sys.argv[1])
-            polynomial = bool(sys.argv[2])
+            polynomial = bool(int(sys.argv[2]))
             dimensions = int(sys.argv[3])
             save_tsne(perplexity, polynomial=polynomial, dimensions=dimensions)
     except:
