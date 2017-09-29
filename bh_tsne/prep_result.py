@@ -25,7 +25,7 @@ with open('result.dat', 'rb') as f:
     assert(len(tsne_test) == len(df_test))
 
     prefix = os.getenv('PREFIX', '/workspace/output/')
-    save_path = '{}tsne_{}d_30p.npz'.format(prefix, no_dims)
+    save_path = '{}tsne_{}d_{}p.npz'.format(prefix, no_dims, int(sys.argv[1]))
     np.savez(save_path, train=tsne_train, valid=tsne_valid, test=tsne_test)
     print('Saved: {}'.format(save_path))
 

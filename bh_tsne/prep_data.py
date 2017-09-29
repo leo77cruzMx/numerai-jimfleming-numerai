@@ -2,6 +2,7 @@ import struct
 import numpy as np
 import pandas as pd
 import os
+import sys
 
 df_train = pd.read_csv(os.getenv('TRAINING', '/workspace/output/train_data.csv'))
 df_valid = pd.read_csv(os.getenv('VALIDATING', '/workspace/output/valid_data.csv'))
@@ -22,7 +23,7 @@ X = np.concatenate([X_train, X_valid, X_test], axis=0)
 N = X.shape[0] # int32
 D = X.shape[1] # int32
 theta = 0.5 # double
-perplexity = 30.0 # double
+perplexity = float(sys.argv[1]) # double
 no_dims = 3 # int32
 
 with open('data.dat', 'wb') as f:

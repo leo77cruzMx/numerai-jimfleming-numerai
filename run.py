@@ -48,22 +48,8 @@ def main():
         os.system('python3 /code/models/pipeline/simple.py')
     if operation in ['t-SNE', 'All']:
         prefix = os.getenv('PREFIX', '/workspace/output/')
-        announce('t-SNE Python')
+        announce('t-SNE')
         os.system('python3 /code/fit_tsne.py')
-        os.rename('{}tsne_3d_30p.npz'.format(prefix), '{}tsne_3d_30p_tsne.npz'.format(prefix))
-        announce('t-SNE C')
-        os.system('python3 /code/bh_tsne/prep_data.py')
-        os.system('/code/bh_tsne/bh_tsne')
-        os.system('python3 /code/bh_tsne/prep_result.py')
-        os.rename('{}tsne_3d_30p.npz'.format(prefix), '{}tsne_3d_30p_bhtsne.npz'.format(prefix))
-        announce('tSNE selection')
-        try:
-            os.remove('{}tsne_3d_30p.npz'.format(prefix))
-        except:
-            pass
-        shutil.copyfile('{}tsne_3d_30p_bhtsne.npz'.format(prefix), '{}tsne_3d_30p.npz'.format(prefix))
-        announce('t-SNE Merge')
-        merge_tsne([1])
     if operation in ['TFNN', 'All']:
         announce('TF NN')
         os.system('python3 /code/models/classifier/main.py')

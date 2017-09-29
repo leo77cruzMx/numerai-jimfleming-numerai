@@ -107,6 +107,27 @@ class Worker(threading.Thread):
                     delay *= 2
             self.tasks.task_done()
 
+def merge_tsne(selection):
+    prefix = os.getenv('PREFIX', '/workspace/output/')
+    each = []
+    each.append(np.load('{}tsne_2d_5p.npz'.format(prefix)))
+    each.append(np.load('{}tsne_2d_10p.npz'.format(prefix)))
+    each.append(np.load('{}tsne_2d_15p.npz'.format(prefix)))
+    each.append(np.load('{}tsne_2d_30p.npz'.format(prefix)))
+    each.append(np.load('{}tsne_2d_50p.npz'.format(prefix)))
+    each.append(np.load('{}tsne_3d_30p.npz'.format(prefix)))
+    each.append(np.load('{}tsne_2d_5p_poly.npz'.format(prefix)))
+    each.append(np.load('{}tsne_2d_10p_poly.npz'.format(prefix)))
+    each.append(np.load('{}tsne_2d_15p_poly.npz'.format(prefix)))
+    each.append(np.load('{}tsne_2d_30p_poly.npz'.format(prefix)))
+    each.append(np.load('{}tsne_2d_50p_poly.npz'.format(prefix)))
+    each.append(np.load('{}tsne_3d_30p.npz'.format(prefix)))
+    selected = [each[i] for i in selection]
+    X_train = np.concatenate([item['train'] for item in selected], axis=1)
+    X_valid = np.concatenate([item['valid'] for item in selected], axis=1)
+    X_test = np.concatenate([item['test'] for item in selected], axis=1)
+    np.savez('{}tsne.npz'.format(prefix), X_train=X_train, X_valid=X_valid, X_test=X_test)
+
 def main():
     try:
         if len(sys.argv) < 4:
@@ -115,7 +136,7 @@ def main():
                 (5, True, 2), (10, True, 2), (15, True, 2), (30, True, 2), (50, True, 2),
                 (30, False, 3)
             ]
-            count = int(os.environ.get('PARALLEL', multiprocessing.cpu_count() - 1))
+            count = int(os.environ.get('PARALLEL', multiprocessing.cpu_count() / 4))
             if count <= 0:
                 count = 1
             sys.stdout.write('Parallel count: {}\n'.format(count))
@@ -126,11 +147,18 @@ def main():
             for definition in definitions:
                 tasks.put(definition)
             tasks.join()
+            merge_tsne([1])
         else:
             perplexity = int(sys.argv[1])
             polynomial = bool(int(sys.argv[2]))
             dimensions = int(sys.argv[3])
-            save_tsne(perplexity, polynomial=polynomial, dimensions=dimensions)
+            if dimensions == 2:
+                save_tsne(perplexity, polynomial=polynomial, dimensions=dimensions)
+            else:
+                if not polynomial:
+                    os.system('python3 /code/bh_tsne/prep_data.py {}'.format(perplexity))
+                    os.system('/code/bh_tsne/bh_tsne')
+                    os.system('python3 /code/bh_tsne/prep_result.py {}'.format(perplexity))
     except:
         traceback.print_exc()
 
