@@ -2,6 +2,7 @@ import struct
 import numpy as np
 import pandas as pd
 import os
+import sys
 
 df_train = pd.read_csv(os.getenv('TRAINING', '/workspace/output/train_data.csv'))
 df_valid = pd.read_csv(os.getenv('VALIDATING', '/workspace/output/valid_data.csv'))

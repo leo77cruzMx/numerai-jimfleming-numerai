@@ -46,10 +46,18 @@ def main():
     if operation in ['LogisticRegression', 'All']:
         announce('Simple Logistic Regression')
         os.system('python3 /code/models/pipeline/simple.py')
-    if operation in ['t-SNE', 'All']:
-        prefix = os.getenv('PREFIX', '/workspace/output/')
-        announce('t-SNE')
+    if operation in ['tSNE2D', 'All']:
+        announce('t-SNE 2D')
         os.system('python3 /code/fit_tsne.py')
+    if operation in ['tSNE3D', 'All']:
+        announce('t-SNE 3D')
+        perplexity = 30
+        os.system('python3 /code/bh_tsne/prep_data.py {}'.format(perplexity))
+        os.system('/code/bh_tsne/bh_tsne')
+        os.system('python3 /code/bh_tsne/prep_result.py {}'.format(perplexity))
+    if operation in ['tSNESummary', 'All']:
+        announce('t-SNE Summary')
+        merge_tsne([1])
     if operation in ['TFNN', 'All']:
         announce('TF NN')
         os.system('python3 /code/models/classifier/main.py')
