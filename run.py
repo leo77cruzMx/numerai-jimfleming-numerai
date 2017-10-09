@@ -1,7 +1,6 @@
 import glob
 import os
 import shutil
-import subprocess
 import sys
 import time
 import numpy as np
@@ -9,6 +8,7 @@ import os
 
 def merge_tsne(selection):
     prefix = os.getenv('PREFIX', '/workspace/output/')
+    wait = bool(int(os.getenv('WAIT', '0')))
     each = []
     each.append('{}tsne_2d_5p.npz'.format(prefix))
     each.append('{}tsne_2d_10p.npz'.format(prefix))
@@ -21,7 +21,7 @@ def merge_tsne(selection):
     each.append('{}tsne_2d_30p_poly.npz'.format(prefix))
     each.append('{}tsne_2d_50p_poly.npz'.format(prefix))
     each.append('{}tsne_3d_30p.npz'.format(prefix))
-    while True:
+    while wait:
         for item in each:
             if not os.path.isfile(item):
                 time.sleep(60)
@@ -55,10 +55,10 @@ def main():
         os.system('python3 /code/models/pipeline/simple.py')
     if operation in ['tSNE2D', 'All']:
         announce('t-SNE 2D')
-        subprocess.Popen(['python3', '/code/fit_tsne.py'])
+        os.system('python3 /code/fit_tsne.py')
     if operation in ['tSNE3D', 'All']:
         announce('t-SNE 3D')
-        subprocess.Popen(['python3', '/code/fit_tsne_3d.py'])
+        os.system('python3 /code/fit_tsne_3d.py')
     if operation in ['tSNESummary', 'All']:
         announce('t-SNE Summary')
         merge_tsne([1])
