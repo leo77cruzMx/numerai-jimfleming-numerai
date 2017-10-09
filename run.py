@@ -1,26 +1,33 @@
 import glob
 import os
 import shutil
+import subprocess
 import sys
+import time
 import numpy as np
 import os
 
 def merge_tsne(selection):
     prefix = os.getenv('PREFIX', '/workspace/output/')
     each = []
-    each.append(np.load('{}tsne_2d_5p.npz'.format(prefix)))
-    each.append(np.load('{}tsne_2d_10p.npz'.format(prefix)))
-    each.append(np.load('{}tsne_2d_15p.npz'.format(prefix)))
-    each.append(np.load('{}tsne_2d_30p.npz'.format(prefix)))
-    each.append(np.load('{}tsne_2d_50p.npz'.format(prefix)))
-    each.append(np.load('{}tsne_3d_30p.npz'.format(prefix)))
-    each.append(np.load('{}tsne_2d_5p_poly.npz'.format(prefix)))
-    each.append(np.load('{}tsne_2d_10p_poly.npz'.format(prefix)))
-    each.append(np.load('{}tsne_2d_15p_poly.npz'.format(prefix)))
-    each.append(np.load('{}tsne_2d_30p_poly.npz'.format(prefix)))
-    each.append(np.load('{}tsne_2d_50p_poly.npz'.format(prefix)))
-    each.append(np.load('{}tsne_3d_30p.npz'.format(prefix)))
-    selected = [each[i] for i in selection]
+    each.append('{}tsne_2d_5p.npz'.format(prefix))
+    each.append('{}tsne_2d_10p.npz'.format(prefix))
+    each.append('{}tsne_2d_15p.npz'.format(prefix))
+    each.append('{}tsne_2d_30p.npz'.format(prefix))
+    each.append('{}tsne_2d_50p.npz'.format(prefix))
+    each.append('{}tsne_2d_5p_poly.npz'.format(prefix))
+    each.append('{}tsne_2d_10p_poly.npz'.format(prefix))
+    each.append('{}tsne_2d_15p_poly.npz'.format(prefix))
+    each.append('{}tsne_2d_30p_poly.npz'.format(prefix))
+    each.append('{}tsne_2d_50p_poly.npz'.format(prefix))
+    each.append('{}tsne_3d_30p.npz'.format(prefix))
+    while True:
+        for item in each:
+            if not os.path.isfile(item):
+                time.sleep(60)
+                continue
+        break
+    selected = [np.load(each[i]) for i in selection]
     X_train = np.concatenate([item['train'] for item in selected], axis=1)
     X_valid = np.concatenate([item['valid'] for item in selected], axis=1)
     X_test = np.concatenate([item['test'] for item in selected], axis=1)
@@ -48,13 +55,10 @@ def main():
         os.system('python3 /code/models/pipeline/simple.py')
     if operation in ['tSNE2D', 'All']:
         announce('t-SNE 2D')
-        os.system('python3 /code/fit_tsne.py')
+        subprocess.Popen(['python3', '/code/fit_tsne.py'])
     if operation in ['tSNE3D', 'All']:
         announce('t-SNE 3D')
-        perplexity = 30
-        os.system('python3 /code/bh_tsne/prep_data.py {}'.format(perplexity))
-        os.system('/code/bh_tsne/bh_tsne')
-        os.system('python3 /code/bh_tsne/prep_result.py {}'.format(perplexity))
+        subprocess.Popen(['python3', '/code/fit_tsne_3d.py'])
     if operation in ['tSNESummary', 'All']:
         announce('t-SNE Summary')
         merge_tsne([1])
