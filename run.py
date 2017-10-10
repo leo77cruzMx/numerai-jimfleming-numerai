@@ -8,7 +8,7 @@ import os
 
 def merge_tsne(selection):
     prefix = os.getenv('PREFIX', '/workspace/output/')
-    wait = bool(int(os.getenv('WAIT', '0')))
+    waiting = bool(int(os.getenv('WAITING', '0')))
     each = []
     each.append('{}tsne_2d_5p.npz'.format(prefix))
     each.append('{}tsne_2d_10p.npz'.format(prefix))
@@ -21,7 +21,7 @@ def merge_tsne(selection):
     each.append('{}tsne_2d_30p_poly.npz'.format(prefix))
     each.append('{}tsne_2d_50p_poly.npz'.format(prefix))
     each.append('{}tsne_3d_30p.npz'.format(prefix))
-    while wait:
+    while waiting:
         for item in each:
             if not os.path.isfile(item):
                 time.sleep(60)
