@@ -22,11 +22,10 @@ def merge_tsne(selection):
     each.append('{}tsne_2d_50p_poly.npz'.format(prefix))
     each.append('{}tsne_3d_30p.npz'.format(prefix))
     while waiting:
+        waiting = False
         for item in each:
             if not os.path.isfile(item):
-                time.sleep(60)
-                continue
-        break
+                waiting = True
     selected = [np.load(each[i]) for i in selection]
     X_train = np.concatenate([item['train'] for item in selected], axis=1)
     X_valid = np.concatenate([item['valid'] for item in selected], axis=1)
