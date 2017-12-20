@@ -19,13 +19,13 @@ from sklearn.model_selection import StratifiedKFold
 import os
 
 def main():
-    df_train = pd.read_csv(os.getenv('IN_TRAINING', '/workspace/input/latest/numerai_training_data.csv'))
-    df_test = pd.read_csv(os.getenv('IN_TESTING', '/workspace/input/latest/numerai_tournament_data.csv'))
+    df_train = pd.read_csv(os.getenv('TRAINING'))
+    df_test = pd.read_csv(os.getenv('TESTING'))
 
     feature_cols = [f for f in list(df_train) if 'feature' in f]
     target_col = 'target'
     test_col = 'is_test'
-    id_col = 't_id'
+    id_col = 'id'
 
     df_train['is_test'] = 0
     df_test['is_test'] = 1
@@ -78,9 +78,9 @@ def main():
     df_valid = df_train_sorted.iloc[-validation_size:]
     print('Creating dataset with validation size: {}'.format(validation_size))
 
-    df_train.to_csv(os.getenv('OUT_TRAINING', '/workspace/output/train_data.csv'), index_label=False)
-    df_valid.to_csv(os.getenv('OUT_VALIDATING', '/workspace/output/valid_data.csv'), index_label=False)
-    df_test.to_csv(os.getenv('OUT_TESTING', '/workspace/output/test_data.csv'), index_label=False)
+    df_train.to_csv(os.getenv('PREPARED_TRAINING'), index_label=False)
+    df_valid.to_csv(os.getenv('PREPARED_VALIDATING'), index_label=False)
+    df_test.to_csv(os.getenv('PREPARED_TESTING'), index_label=False)
     print('Done.')
 
 if __name__ == '__main__':

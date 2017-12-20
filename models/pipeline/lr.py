@@ -23,11 +23,13 @@ from sklearn.manifold import Isomap
 
 from transformers import ItemSelector
 
+import os
+
 def main():
     # load data
-    df_train = pd.read_csv('/workspace/output/train_data.csv')
-    df_valid = pd.read_csv('/workspace/output/valid_data.csv')
-    df_test = pd.read_csv('/workspace/output/test_data.csv')
+    df_train = pd.read_csv(os.getenv('PREPARED_TRAINING'))
+    df_valid = pd.read_csv(os.getenv('PREPARED_VALIDATING'))
+    df_test = pd.read_csv(os.getenv('PREPARED_TESTING'))
 
     feature_cols = list(df_train.columns[:-1])
     target_col = df_train.columns[-1]
@@ -40,12 +42,13 @@ def main():
 
     X_test = df_test[feature_cols].values
 
-    tsne_data_2d_5p = np.load('/workspace/output/tsne_2d_5p.npz')
-    tsne_data_2d_10p = np.load('/workspace/output/tsne_2d_10p.npz')
-    tsne_data_2d_15p = np.load('/workspace/output/tsne_2d_15p.npz')
-    tsne_data_2d_30p = np.load('/workspace/output/tsne_2d_30p.npz')
-    tsne_data_2d_50p = np.load('/workspace/output/tsne_2d_50p.npz')
-    tsne_data_3d_30p = np.load('/workspace/output/tsne_3d_30p.npz')
+    prefix = os.getenv('STORING')
+    tsne_data_2d_5p = np.load(os.path.join(prefix, 'tsne_2d_5p.npz'))
+    tsne_data_2d_10p = np.load(os.path.join(prefix, 'tsne_2d_10p.npz'))
+    tsne_data_2d_15p = np.load(os.path.join(prefix, 'tsne_2d_15p.npz'))
+    tsne_data_2d_30p = np.load(os.path.join(prefix, 'tsne_2d_30p.npz'))
+    tsne_data_2d_50p = np.load(os.path.join(prefix, 'tsne_2d_50p.npz'))
+    tsne_data_3d_30p = np.load(os.path.join(prefix, 'tsne_3d_30p.npz'))
 
     # concat features
     X_train_concat = {
@@ -106,7 +109,7 @@ def main():
         'id': df_test['id'],
         'probability': p_test[:,1]
     })
-    csv_path = '/workspace/output/predictions_{}.lr.csv'.format(loss)
+    csv_path = os.getenv('PREDICTING')
     df_pred.to_csv(csv_path, columns=('id', 'probability'), index=None)
     print('Saved: {}'.format(csv_path))
 

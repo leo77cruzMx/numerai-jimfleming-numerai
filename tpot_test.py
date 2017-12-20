@@ -15,9 +15,9 @@ from tpot import TPOTClassifier
 import os
 
 def main():
-    df_train = pd.read_csv(os.getenv('TRAINING', '/workspace/output/train_data.csv'))
-    df_valid = pd.read_csv(os.getenv('VALIDATING', '/workspace/output/valid_data.csv'))
-    df_test = pd.read_csv(os.getenv('TESTING', '/workspace/output/test_data.csv'))
+    df_train = pd.read_csv(os.getenv('PREPARED_TRAINING'))
+    df_valid = pd.read_csv(os.getenv('PREPARED_VALIDATING'))
+    df_test = pd.read_csv(os.getenv('PREPARED_TESTING'))
 
     feature_cols = list(df_train.columns[:-1])
     target_col = df_train.columns[-1]
@@ -30,8 +30,8 @@ def main():
 
     X_test = df_test[feature_cols].values
 
-    prefix = os.getenv('PREFIX', '/workspace/output/')
-    tsne_data = np.load('{}tsne_2d_5p.npz'.format(prefix))
+    prefix = os.getenv('STORING')
+    tsne_data = np.load(os.path.join(prefix, 'tsne_2d_5p.npz'))
     tsne_train = tsne_data['train']
     tsne_valid = tsne_data['valid']
     tsne_test = tsne_data['test']
@@ -51,14 +51,14 @@ def main():
     tpot.fit(X_train_concat, y_train)
     loss = tpot.score(X_valid_concat, y_valid)
     print(loss)
-    tpot.export('{}tpot_pipeline.py'.format(prefix))
+    tpot.export(os.path.join(prefix, 'tpot_pipeline.py'))
 
     p_test = tpot.predict_proba(X_test_concat)
     df_pred = pd.DataFrame({
         'id': df_test['id'],
         'probability': p_test[:,1]
     })
-    csv_path = os.getenv('PREDICTING', '/workspace/output/predictions_{}.tpot.csv'.format(loss))
+    csv_path = os.getenv('PREDICTING')
     df_pred.to_csv(csv_path, columns=('id', 'probability'), index=None)
     print('Saved: {}'.format(csv_path))
 

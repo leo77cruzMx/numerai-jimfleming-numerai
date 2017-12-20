@@ -11,13 +11,13 @@ import pandas as pd
 paths = os.getenv('ENSEMBLING', None)
 if None == paths:
     paths = [
-        # glob.glob('/workspace/output/predictions*.simple.csv')[0],
-        glob.glob('/workspace/output/predictions*.lr.csv')[0],
-        glob.glob('/workspace/output/predictions*.fm.csv')[0],
-        # glob.glob('/workspace/output/predictions*.tf_pairwise.csv')[0],
-        # glob.glob('/workspace/output/predictions*.tf_classifier.csv')[0],
-        glob.glob('/workspace/output/predictions*.gbt.csv')[0],
-        glob.glob('/workspace/output/predictions*.pairwise.csv')[0]
+        # glob.glob(os.getenv('PREDICTING') + '.simple')[0],
+        glob.glob(os.getenv('PREDICTING') + '.lr')[0],
+        glob.glob(os.getenv('PREDICTING') + '.fm')[0],
+        # glob.glob(os.getenv('PREDICTING') + '.tf_pairwise')[0],
+        # glob.glob(os.getenv('PREDICTING') + '.tf_classifier')[0],
+        glob.glob(os.getenv('PREDICTING') + '.gbt')[0],
+        glob.glob(os.getenv('PREDICTING') + '.pairwise')[0]
     ]
 else:
     paths = paths.split(':')
@@ -37,7 +37,7 @@ def main():
         'id': t_id,
         'probability': probability,
     })
-    csv_path = os.getenv('PREDICTING', '/workspace/output/predictions_ensemble_{}.csv'.format(int(time.time())))
+    csv_path = os.getenv('PREDICTING')
     df_pred.to_csv(csv_path, columns=('id', 'probability'), index=None)
     print('Saved: {}'.format(csv_path))
 

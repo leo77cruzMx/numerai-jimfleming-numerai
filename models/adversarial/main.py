@@ -20,15 +20,17 @@ from model import Model
 
 from sklearn.utils import shuffle
 
+import os
+
 FLAGS = tf.app.flags.FLAGS
 
 tf.app.flags.DEFINE_integer('num_epochs', 30, "")
 tf.app.flags.DEFINE_integer('batch_size', 128, "")
 
 def main(_):
-    df_train = pd.read_csv('/workspace/output/train_data.csv')
-    df_valid = pd.read_csv('/workspace/output/valid_data.csv')
-    df_test = pd.read_csv('/workspace/output/test_data.csv')
+    df_train = pd.read_csv(os.getenv('PREPARED_TRAINING'))
+    df_valid = pd.read_csv(os.getenv('PREPARED_VALIDATING'))
+    df_test = pd.read_csv(os.getenv('PREPARED_TESTING'))
 
     feature_cols = list(df_train.columns[:-1])
     target_col = df_train.columns[-1]
@@ -52,7 +54,7 @@ def main(_):
         test_model = Model(num_features, features, targets, is_training=False)
 
     summary_op = tf.summary.merge_all()
-    logdir = '/workspace/output/logs/adversarial_{}'.format(int(time.time()))
+    logdir = os.path.join(os.getenv('STORING'), 'logs', 'adversarial_{}'.format(int(time.time())))
     supervisor = tf.train.Supervisor(logdir=logdir, summary_op=None)
     with supervisor.managed_session() as sess:
         summary_writer = tf.summary.FileWriter(logdir)
@@ -142,7 +144,7 @@ def main(_):
         z_valid = sess.run(test_model.z, feed_dict={ features: X_valid })
         z_test = sess.run(test_model.z, feed_dict={ features: X_test })
 
-        np.savez('/workspace/output/adversarial.npz', z_train=z_train, z_valid=z_valid, z_test=z_test)
+        np.savez(os.path.join(os.getenv('STORING'), 'adversarial.npz'), z_train=z_train, z_valid=z_valid, z_test=z_test)
 
 if __name__ == "__main__":
     tf.app.run()

@@ -50,9 +50,9 @@ def divide_samples(X, y):
     return shuffle(X_L, X_R, y_both)
 
 def main(_):
-    df_train = pd.read_csv(os.getenv('TRAINING', '/workspace/output/train_data.csv'))
-    df_valid = pd.read_csv(os.getenv('VALIDATING', '/workspace/output/valid_data.csv'))
-    df_test = pd.read_csv(os.getenv('TESTING', '/workspace/output/test_data.csv'))
+    df_train = pd.read_csv(os.getenv('PREPARED_TRAINING'))
+    df_valid = pd.read_csv(os.getenv('PREPARED_VALIDATING'))
+    df_test = pd.read_csv(os.getenv('PREPARED_TESTING'))
 
     feature_cols = list(df_train.columns[:-1])
     target_col = df_train.columns[-1]
@@ -65,8 +65,8 @@ def main(_):
 
     X_test = df_test[feature_cols].values
 
-    prefix = os.getenv('PREFIX', '/workspace/output/')
-    tsne_data = np.load('{}tsne.npz'.format(prefix))
+    prefix = os.getenv('STORING')
+    tsne_data = np.load(os.path.join(prefix, 'tsne.npz'))
     tsne_train = tsne_data['X_train']
     tsne_valid = tsne_data['X_valid']
     tsne_test = tsne_data['X_test']
@@ -189,7 +189,7 @@ def main(_):
             'id': df_test['id'],
             'probability': p_test[:,1]
         })
-        csv_path = os.getenv('PREDICTING', '/workspace/output/predictions_{}.tf_pairwise.csv'.format(loss))
+        csv_path = os.getenv('PREDICTING')
         df_pred.to_csv(csv_path, columns=('id', 'probability'), index=None)
         print('Saved: {}'.format(csv_path))
 

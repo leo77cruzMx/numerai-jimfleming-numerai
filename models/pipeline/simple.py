@@ -15,11 +15,13 @@ from sklearn.preprocessing import PolynomialFeatures
 
 from transformers import ItemSelector
 
+import os
+
 def main():
     # load data
-    df_train = pd.read_csv('/workspace/output/train_data.csv')
-    df_valid = pd.read_csv('/workspace/output/valid_data.csv')
-    df_test = pd.read_csv('/workspace/output/test_data.csv')
+    df_train = pd.read_csv(os.getenv('PREPARED_TRAINING'))
+    df_valid = pd.read_csv(os.getenv('PREPARED_VALIDATING'))
+    df_test = pd.read_csv(os.getenv('PREPARED_TESTING'))
 
     feature_cols = list(df_train.columns[:-1])
     target_col = df_train.columns[-1]
@@ -51,7 +53,7 @@ def main():
         'id': df_test['id'],
         'probability': p_test[:,1]
     })
-    csv_path = '/workspace/output/predictions_{}.simple.csv'.format(loss)
+    csv_path = os.getenv('PREDICTING')
     df_pred.to_csv(csv_path, columns=('id', 'probability'), index=None)
     print('Saved: {}'.format(csv_path))
 

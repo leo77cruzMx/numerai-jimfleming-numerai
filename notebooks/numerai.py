@@ -18,14 +18,16 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+import os
+
 sns.set_style('white')
 sns.set_context('notebook', font_scale=2)
 
 # Import Data
 
-df_train = pd.read_csv('/workspace/output/train_data.csv')
-df_valid = pd.read_csv('/workspace/output/valid_data.csv')
-df_test = pd.read_csv('/workspace/output/test_data.csv')
+df_train = pd.read_csv(os.getenv('PREPARED_TRAINING'))
+df_valid = pd.read_csv(os.getenv('PREPARED_VALIDATING'))
+df_test = pd.read_csv(os.getenv('PREPARED_TESTING'))
 
 feature_cols = list(df_train.columns[:-1])
 target_col = df_train.columns[-1]
@@ -41,7 +43,7 @@ df_plot = pd.melt(df_valid, 'target', var_name='feature')
 fig, ax = plt.subplots(figsize=(24, 24))
 sns.heatmap(df_valid.corr(), square=True)
 
-fig.savefig('/workspace/output/figure1.png')
+fig.savefig(os.path.join(os.getenv('STORING'), 'figure1.png'))
 
 fig, ax = plt.subplots(figsize=(24, 12))
 
@@ -50,7 +52,7 @@ sns.despine(left=True, bottom=True)
 
 ax.set_xticklabels(feature_cols, rotation=90);
 
-fig.savefig('/workspace/output/figure2.png')
+fig.savefig(os.path.join(os.getenv('STORING'), 'figure2.png'))
 
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 df_valid_std = df_valid.copy()
@@ -61,7 +63,7 @@ sns.violinplot(data=df_plot_std, x='feature', y='value', split=True, hue='target
 sns.despine(left=True, bottom=True)
 ax.set_xticklabels(feature_cols, rotation=90)
 
-fig.savefig('/workspace/output/figure3.png')
+fig.savefig(os.path.join(os.getenv('STORING'), 'figure3.png'))
 
 # df_valid_sample = df_valid.sample(n=100)
 # df_valid_sample_x = pd.DataFrame(df_valid_sample, columns=feature_cols)
@@ -74,7 +76,7 @@ fig.savefig('/workspace/output/figure3.png')
 p = sns.pairplot(df_valid.sample(n=1000), hue='target', vars=feature_cols, size=2)
 sns.despine(left=True, bottom=True)
 
-plt.savefig('/workspace/output/figure4.png')
+plt.savefig(os.path.join(os.getenv('STORING'), 'figure4.png'))
 
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import PolynomialFeatures
@@ -98,14 +100,14 @@ ax.scatter(X_pipeline0[:,0], X_pipeline0[:,1], c=cm.Set3(np.zeros_like(X_pipelin
 ax.scatter(X_pipeline1[:,0], X_pipeline1[:,1], c=cm.Set3(np.ones_like(X_pipeline0[:,0])), s=24, lw=0, alpha=0.8, marker='o', label='1')
 ax.legend()
 
-fig.savefig('/workspace/output/figure5.png')
+fig.savefig(os.path.join(os.getenv('STORING'), 'figure5.png'))
 
-tsne_data = np.load('/workspace/output/tsne_2d_5p.npz')
+tsne_data = np.load(os.path.join(os.getenv('STORING'), 'tsne_2d_5p.npz'))
 
 fig, ax = plt.subplots(figsize=(25, 25))
 plt.scatter(tsne_data['train'][:,0], tsne_data['train'][:,1], c=df_train['target'], cmap='Set3', alpha=0.8, s=4, lw=0)
 
-fig.savefig('/workspace/output/figure6.png')
+fig.savefig(os.path.join(os.getenv('STORING'), 'figure6.png'))
 
 from sklearn.manifold import Isomap
 from sklearn.pipeline import make_union, make_pipeline
@@ -123,4 +125,4 @@ np.unique(dbscan_train)
 fig, ax = plt.subplots(figsize=(24, 24))
 plt.scatter(isomap_train[:,0], isomap_train[:,1], c=dbscan_train, cmap='Set1', alpha=0.8, s=8, marker='.', lw=0)
 
-fig.savefig('/workspace/output/figure7.png')
+fig.savefig(os.path.join(os.getenv('STORING'), 'figure7.png'))

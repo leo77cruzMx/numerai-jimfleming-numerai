@@ -25,16 +25,16 @@ import sys
 
 def locate(prefix, perplexity, polynomial, dimensions):
     if polynomial:
-        location = '{}tsne_{}d_{}p_poly.npz'.format(prefix, dimensions, perplexity)
+        name = 'tsne_{}d_{}p_poly.npz'.format(dimensions, perplexity)
     else:
-        location = '{}tsne_{}d_{}p.npz'.format(prefix, dimensions, perplexity)
-    return location
+        name = 'tsne_{}d_{}p.npz'.format(dimensions, perplexity)
+    return os.path.join(prefix, name)
 
 def save_tsne(perplexity, dimensions=2, polynomial=False):
-    prefix = os.getenv('PREFIX', '/workspace/output/')
-    df_train = pd.read_csv(os.getenv('TRAINING', '/workspace/output/train_data.csv'))
-    df_valid = pd.read_csv(os.getenv('VALIDATING', '/workspace/output/valid_data.csv'))
-    df_test = pd.read_csv(os.getenv('TESTING', '/workspace/output/test_data.csv'))
+    prefix = os.getenv('STORING')
+    df_train = pd.read_csv(os.getenv('PREPARED_TRAINING'))
+    df_valid = pd.read_csv(os.getenv('PREPARED_VALIDATING'))
+    df_test = pd.read_csv(os.getenv('PREPARED_TESTING'))
 
     feature_cols = list(df_train.columns[:-1])
     target_col = df_train.columns[-1]
@@ -70,9 +70,10 @@ def save_tsne(perplexity, dimensions=2, polynomial=False):
     assert(len(tsne_test) == len(X_test))
 
     if polynomial:
-        save_path = '{}tsne_{}d_{}p_poly.npz'.format(prefix, dimensions, perplexity)
+        save_path = 'tsne_{}d_{}p_poly.npz'.format(dimensions, perplexity)
     else:
-        save_path = '{}tsne_{}d_{}p.npz'.format(prefix, dimensions, perplexity)
+        save_path = 'tsne_{}d_{}p.npz'.format(dimensions, perplexity)
+    save_path = os.path.join(prefix, save_path)
 
     np.savez(save_path, \
         train=tsne_train, \
@@ -88,7 +89,7 @@ class Worker(threading.Thread):
         self.tasks = tasks
 
     def run(self):
-        prefix = os.getenv('PREFIX', '/workspace/output/')
+        prefix = os.getenv('STORING')
         while True:
             perplexity, polynomial, dimensions = self.tasks.get()
             location = locate(prefix, perplexity, polynomial, dimensions)
@@ -126,7 +127,6 @@ def main():
             for definition in definitions:
                 tasks.put(definition)
             tasks.join()
-            merge_tsne([1])
         else:
             perplexity = int(sys.argv[1])
             polynomial = bool(int(sys.argv[2]))

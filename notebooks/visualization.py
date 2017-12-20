@@ -25,13 +25,15 @@ from sompy.visualization.mapview import View2D
 from sompy.visualization.umatrix import UMatrixView
 from sompy.visualization.histogram import Hist2d
 
+import os
+
 sns.set_style('white')
 sns.set_context('notebook', font_scale=2)
 
 
-df_train = pd.read_csv('/workspace/output/train_data.csv')
-df_valid = pd.read_csv('/workspace/output/valid_data.csv')
-df_test = pd.read_csv('/workspace/output/test_data.csv')
+df_train = pd.read_csv(os.getenv('PREPARED_TRAINING'))
+df_valid = pd.read_csv(os.getenv('PREPARED_VALIDATING'))
+df_test = pd.read_csv(os.getenv('PREPARED_TESTING'))
 
 feature_cols = list(df_train.columns[:-1])
 target_col = df_train.columns[-1]
@@ -71,7 +73,7 @@ print(projection)
 v = UMatrixView(8, 8, 'SOM', cmap='viridis')
 v.show(sm)
 
-plt.savefig('/workspace/output/figure8.png')
+plt.savefig(os.path.join(os.getenv('STORING'), 'figure8.png'))
 
 
 v = View2D(8, 8, 'SOM', cmap='viridis')
@@ -79,10 +81,10 @@ v.prepare()
 v.show(sm, col_sz=5, cmap='viridis')
 
 plt.rcParams['axes.labelsize'] = 10
-plt.savefig('/workspace/output/figure9.png')
+plt.savefig(os.path.join(os.getenv('STORING'), 'figure9.png'))
 
 
-tsne_data = np.load('/workspace/output/tsne_2d_30p.npz')
+tsne_data = np.load(os.path.join(os.getenv('STORING'), 'tsne_2d_30p.npz'))
 tsne_train = tsne_data['train']
 tsne_valid = tsne_data['valid']
 tsne_test = tsne_data['test']
@@ -97,10 +99,10 @@ fig = plt.figure(figsize=(24, 24))
 ax = fig.add_subplot(111)
 ax.scatter(tsne_all[:,0], tsne_all[:,1], c=dbscan_all, cmap='Set3', s=8, alpha=0.8, marker='.', lw=0)
 
-fig.savefig('/workspace/output/figure10.png')
+fig.savefig(os.path.join(os.getenv('STORING'), 'figure10.png'))
 
 
-tsne_data = np.load('/workspace/output/tsne_3d_30p.npz')
+tsne_data = np.load(os.path.join(os.getenv('STORING'), 'tsne_3d_30p.npz'))
 tsne_train = tsne_data['train']
 tsne_valid = tsne_data['valid']
 tsne_test = tsne_data['test']
@@ -113,7 +115,7 @@ fig = plt.figure(figsize=(16, 16))
 ax = fig.add_subplot(111, projection='3d')
 ax.scatter(tsne_all[:,0], tsne_all[:,1], tsne_all[:,2], c=dbscan_all, cmap='Set1', s=10, alpha=1.0, marker='.', lw=0, depthshade=True)
 
-fig.savefig('/workspace/output/figure11.png')
+fig.savefig(os.path.join(os.getenv('STORING'), 'figure11.png'))
 
 
 import plotly
@@ -133,4 +135,4 @@ trace = go.Scatter3d(
     )
 )
 
-plotly.offline.plot(go.Figure(data=[trace], layout=go.Layout(title='tsne-3d-scatter')), filename='/workspace/output/tsne-3d-scatter.html')
+plotly.offline.plot(go.Figure(data=[trace], layout=go.Layout(title='tsne-3d-scatter')), filename=os.path.join(os.getenv('STORING'), 'tsne-3d-scatter.html'))
