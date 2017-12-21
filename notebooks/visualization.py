@@ -18,7 +18,6 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from tsne import bh_sne
 from sompy import SOMFactory
 from sklearn.cluster import DBSCAN
 from sompy.visualization.mapview import View2D

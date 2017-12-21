@@ -12,3 +12,4 @@ seaborn==0.8.1
 jupyter==1.0.0
 numexpr==2.6.4 # Required by SOMPY
 xgboost==0.6a2
+MulticoreTSNE==0.0.1.1

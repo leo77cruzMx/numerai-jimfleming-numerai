@@ -10,7 +10,6 @@ RUN pip3 install --upgrade pip && \
     rm /tmp/requirements.txt
 RUN pip3 install runipy==0.1.3 && \
     sed -i "s/'svg'\,/'svg',\ 'text\/vnd\.plotly\.v1\+html'\:\ 'html'\,/g" /usr/local/lib/python3.5/dist-packages/runipy/notebook_runner.py
-RUN pip3 install git+https://github.com/alexisbcook/tsne.git
 RUN pip install plotly==2.2.3
 ADD Makefile.fastFM /Makefile.fastFM
 RUN git clone --recursive https://github.com/ibayer/fastFM.git && \
