@@ -36,7 +36,7 @@ def main():
 
     classifier = Pipeline(steps=[
         ('poly', PolynomialFeatures(degree=2)),
-        ('lr', LogisticRegression(penalty='l2', C=1e-2, n_jobs=-1, verbose=2)),
+        ('lr', LogisticRegression(penalty='l2', C=1e-2, verbose=2)),
     ])
 
     print('Fitting...')

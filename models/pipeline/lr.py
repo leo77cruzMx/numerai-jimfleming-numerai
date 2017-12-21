@@ -92,7 +92,7 @@ def main():
         ])),
         ('poly', PolynomialFeatures(degree=2)),
         ('scaler', StandardScaler()),
-        ('lr', LogisticRegression(penalty='l2', C=1e-2, n_jobs=-1)),
+        ('lr', LogisticRegression(penalty='l2', C=1e-2)),
     ])
 
     print('Fitting...')

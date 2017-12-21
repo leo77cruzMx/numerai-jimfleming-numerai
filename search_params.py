@@ -60,7 +60,7 @@ def main():
 
     cv = [(train_indices, valid_indices)]
 
-    search = model_selection.RandomizedSearchCV(pipeline, params, cv=cv, n_iter=100, n_jobs=1, verbose=2)
+    search = model_selection.RandomizedSearchCV(pipeline, params, cv=cv, n_iter=100, verbose=2)
     search.fit(X_search, y_search)
 
     print(search.best_score_)

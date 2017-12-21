@@ -131,7 +131,7 @@ def main():
     classifier = make_pipeline(make_union(
         ItemSelector(key='L'),
         ItemSelector(key='R')
-    ), LogisticRegression(penalty='l2', C=1e-2, n_jobs=-1, warm_start=True))
+    ), LogisticRegression(penalty='l2', C=1e-2, warm_start=True))
 
     for i in trange(10):
         X_train_both, y_train_both = divide_samples_train(*shuffle(X_train_concat, y_train))
