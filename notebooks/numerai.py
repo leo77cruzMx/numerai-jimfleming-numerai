@@ -17,11 +17,24 @@ matplotlib.use('Agg')
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 
 import os
 
 sns.set_style('white')
 sns.set_context('notebook', font_scale=2)
+
+def heatmap(data, fig, ax):
+    features = [f for f in list(data) if 'feature' in f]
+    features = data[features]
+    correlation_matrix = features.corr()
+    #fig = plt.figure()
+    #ax = fig.add_subplot(111)
+    cmap = cm.get_cmap('RdBu_r', 30)
+    cax = ax.imshow(correlation_matrix, interpolation='nearest', cmap=cmap)
+    fig.colorbar(cax, ticks=[.75,.8,.85,.90,.95,1])
+    plt.title('Feature Correlation')
+
 
 # Import Data
 
@@ -41,7 +54,7 @@ df_valid[target_col] = df_valid[target_col].astype(np.int32)
 df_plot = pd.melt(df_valid, 'target', var_name='feature')
 
 fig, ax = plt.subplots(figsize=(24, 24))
-sns.heatmap(df_valid.corr(), square=True)
+heatmap(df_valid, fig, ax)
 
 fig.savefig(os.path.join(os.getenv('STORING'), 'figure1.png'))
 
