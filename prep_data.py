@@ -31,7 +31,7 @@ def main():
     df_test['is_test'] = 1
 
     df_data = pd.concat([df_train, df_test])
-    df_data = df_data.reindex_axis(feature_cols + [test_col, target_col], axis='columns')
+    df_data = df_data.reindex(columns=feature_cols + [test_col, target_col])
 
     X_split = df_data[feature_cols]
     y_split = df_data[test_col]

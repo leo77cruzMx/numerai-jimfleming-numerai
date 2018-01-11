@@ -37,7 +37,7 @@ class Model(object):
 
         # setup learning
         if is_training:
-            self.global_step = tf.contrib.framework.get_or_create_global_step()
+            self.global_step = tf.train.get_or_create_global_step()
 
             optimizer_d = tf.train.AdamOptimizer(learning_rate=1e-4)
             optimizer_g = tf.train.AdamOptimizer(learning_rate=1e-4)
