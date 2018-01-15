@@ -10,7 +10,7 @@ from MulticoreTSNE import MulticoreTSNE as TSNE
 from sklearn.preprocessing import PolynomialFeatures
 
 
-def save_tsne(perplexity, dimensions, polynomial):
+def save_tsne(perplexity, polynomial):
     prefix = os.getenv('STORING')
     df_train = pd.read_csv(os.getenv('PREPARED_TRAINING'))
     df_valid = pd.read_csv(os.getenv('PREPARED_VALIDATING'))
@@ -33,15 +33,15 @@ def save_tsne(perplexity, dimensions, polynomial):
         poly = PolynomialFeatures(degree=2)
         X_all = poly.fit_transform(X_all)
 
-    template = 'Running TSNE; perplexity: {}, dimensions: {}, polynomial: {}\n'
-    sys.stdout.write(template.format(perplexity, dimensions, polynomial))
+    template = 'Running 2D TSNE; perplexity: {}, polynomial: {}\n'
+    sys.stdout.write(template.format(perplexity, polynomial))
     sys.stdout.flush()
     start_time = time.time()
-    count = int(os.environ.get('PARALLEL', -1))
+    count = int(os.environ.get('PARALLEL', '-1'))
     tsne_all = TSNE(
-        n_components=dimensions, perplexity=perplexity, n_jobs=count
+        n_components=2, perplexity=perplexity, n_jobs=count
     ).fit_transform(X_all)
-    sys.stdout.write('TSNE: {}s\n'.format(time.time() - start_time))
+    sys.stdout.write('TSNE completed: {}s\n'.format(time.time() - start_time))
     sys.stdout.flush()
 
     end = X_train.shape[0]
@@ -59,9 +59,9 @@ def save_tsne(perplexity, dimensions, polynomial):
     assert(len(tsne_test) == len(X_test))
 
     if polynomial:
-        save_path = 'tsne_{}d_{}p_poly.npz'.format(dimensions, perplexity)
+        save_path = 'tsne_2d_{}p_poly.npz'.format(perplexity)
     else:
-        save_path = 'tsne_{}d_{}p.npz'.format(dimensions, perplexity)
+        save_path = 'tsne_2d_{}p.npz'.format(perplexity)
     save_path = os.path.join(prefix, save_path)
 
     np.savez(save_path, train=tsne_train, valid=tsne_valid, test=tsne_test)
@@ -70,15 +70,12 @@ def save_tsne(perplexity, dimensions, polynomial):
 
 
 def main():
-    definitions = [
-        (5, False, 2), (10, False, 2), (15, False, 2),
-        (30, False, 2), (50, False, 2),
-        (5, True, 2), (10, True, 2), (15, True, 2),
-        (30, True, 2), (50, True, 2)
-    ]
-    for definition in definitions:
-        perplexity, polynomial, dimensions = definition
-        save_tsne(perplexity, dimensions, polynomial)
+    perplexity = os.getenv('TSNE_PERPLEXITY', '5,10,15,30,50,5,10,15,30,50')
+    perplexity = [int(value) for value in perplexity.split(',')]
+    polynomial = os.getenv('TSNE_POLYNOMIAL', '0,0,0,0,0,1,1,1,1,1')
+    polynomial = [bool(int(value)) for value in polynomial.split(',')]
+    for i in range(min(len(perplexity), len(polynomial))):
+        save_tsne(perplexity[i], polynomial[i])
 
 
 if __name__ == '__main__':
