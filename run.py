@@ -45,7 +45,8 @@ def merge_tsne(selection):
     each.append(os.path.join(prefix, 'tsne_2d_15p_poly.npz'))
     each.append(os.path.join(prefix, 'tsne_2d_30p_poly.npz'))
     each.append(os.path.join(prefix, 'tsne_2d_50p_poly.npz'))
-    each.append(os.path.join(prefix, 'tsne_3d_30p.npz'))
+    if not bool(int(os.getenv('TSNE_2D_ONLY', '0'))):
+        each.append(os.path.join(prefix, 'tsne_3d_30p.npz'))
     while waiting:
         waiting = False
         for item in each:
@@ -85,7 +86,7 @@ def main():
     if operation in ['tSNE2D', 'All']:
         announce('t-SNE 2D')
         os.system('python3 /code/fit_tsne.py')
-    if operation in ['tSNE3D', 'All']:
+    if operation in ['tSNE3D', 'All'] and not bool(int(os.getenv('TSNE_2D_ONLY', '0'))):
         announce('t-SNE 3D')
         os.system('python3 /code/fit_tsne_3d.py')
     if operation in ['tSNESummary', 'All']:

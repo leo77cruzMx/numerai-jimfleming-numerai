@@ -48,7 +48,9 @@ def main():
     tsne_data_2d_15p = np.load(os.path.join(prefix, 'tsne_2d_15p.npz'))
     tsne_data_2d_30p = np.load(os.path.join(prefix, 'tsne_2d_30p.npz'))
     tsne_data_2d_50p = np.load(os.path.join(prefix, 'tsne_2d_50p.npz'))
-    tsne_data_3d_30p = np.load(os.path.join(prefix, 'tsne_3d_30p.npz'))
+    tsne_2d_only = bool(int(os.getenv('TSNE_2D_ONLY', '0')))
+    if not tsne_2d_only:
+        tsne_data_3d_30p = np.load(os.path.join(prefix, 'tsne_3d_30p.npz'))
 
     # concat features
     X_train_concat = {
@@ -58,8 +60,9 @@ def main():
         'tsne_2d_15p': tsne_data_2d_15p['train'],
         'tsne_2d_30p': tsne_data_2d_30p['train'],
         'tsne_2d_50p': tsne_data_2d_50p['train'],
-        'tsne_3d_30p': tsne_data_3d_30p['train'],
     }
+    if not tsne_2d_only:
+        X_train_concat['tsne_3d_30p'] = tsne_data_3d_30p['train']
     X_valid_concat = {
         'X': X_valid,
         'tsne_2d_5p': tsne_data_2d_5p['valid'],
@@ -67,8 +70,9 @@ def main():
         'tsne_2d_15p': tsne_data_2d_15p['valid'],
         'tsne_2d_30p': tsne_data_2d_30p['valid'],
         'tsne_2d_50p': tsne_data_2d_50p['valid'],
-        'tsne_3d_30p': tsne_data_3d_30p['valid'],
     }
+    if not tsne_2d_only:
+        X_valid_concat['tsne_3d_30p'] = tsne_data_3d_30p['valid']
     X_test_concat = {
         'X': X_test,
         'tsne_2d_5p': tsne_data_2d_5p['test'],
@@ -76,20 +80,23 @@ def main():
         'tsne_2d_15p': tsne_data_2d_15p['test'],
         'tsne_2d_30p': tsne_data_2d_30p['test'],
         'tsne_2d_50p': tsne_data_2d_50p['test'],
-        'tsne_3d_30p': tsne_data_3d_30p['test'],
     }
+    if not tsne_2d_only:
+        X_test_concat['tsne_3d_30p'] = tsne_data_3d_30p['test']
 
     # build pipeline
+    transformers = [
+        ('X', ItemSelector('X')),
+        ('tsne_2d_5p', ItemSelector('tsne_2d_5p')),
+        ('tsne_2d_10p', ItemSelector('tsne_2d_10p')),
+        ('tsne_2d_15p', ItemSelector('tsne_2d_15p')),
+        ('tsne_2d_30p', ItemSelector('tsne_2d_30p')),
+        ('tsne_2d_50p', ItemSelector('tsne_2d_50p')),
+    ]
+    if not tsne_2d_only:
+        transformers.append(('tsne_3d_30p', ItemSelector('tsne_3d_30p')))
     classifier = Pipeline(steps=[
-        ('features', FeatureUnion(transformer_list=[
-            ('tsne_2d_5p', ItemSelector('tsne_2d_5p')),
-            ('tsne_2d_10p', ItemSelector('tsne_2d_10p')),
-            ('tsne_2d_15p', ItemSelector('tsne_2d_15p')),
-            ('tsne_2d_30p', ItemSelector('tsne_2d_30p')),
-            ('tsne_2d_50p', ItemSelector('tsne_2d_50p')),
-            ('tsne_3d_30p', ItemSelector('tsne_3d_30p')),
-            ('X', ItemSelector('X')),
-        ])),
+        ('features', FeatureUnion(transformer_list=transformers)),
         ('poly', PolynomialFeatures(degree=2)),
         ('scaler', StandardScaler()),
         ('gbt', GradientBoostingClassifier()),

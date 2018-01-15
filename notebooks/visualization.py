@@ -25,6 +25,7 @@ from sompy.visualization.umatrix import UMatrixView
 from sompy.visualization.histogram import Hist2d
 
 import os
+import sys
 
 sns.set_style('white')
 sns.set_context('notebook', font_scale=2)
@@ -100,6 +101,8 @@ ax.scatter(tsne_all[:,0], tsne_all[:,1], c=dbscan_all, cmap='Set3', s=8, alpha=0
 
 fig.savefig(os.path.join(os.getenv('STORING'), 'figure10.png'))
 
+if bool(int(os.getenv('TSNE_2D_ONLY', '0'))):
+    sys.exit()
 
 tsne_data = np.load(os.path.join(os.getenv('STORING'), 'tsne_3d_30p.npz'))
 tsne_train = tsne_data['train']
