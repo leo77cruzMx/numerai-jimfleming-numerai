@@ -18,12 +18,8 @@ RUN git clone --recursive https://github.com/ibayer/fastFM.git && \
     pip3 install -r ./requirements.txt && \
     make && \
     pip3 install .
-RUN git clone https://github.com/compmonks/SOMPY.git && \
+RUN git clone https://github.com/altermarkive/SOMPY.git && \
     cd /SOMPY && \
-    git reset --hard 5e94ba6d2d5457b3ae231eabed9b63436639d13d
-RUN cd /SOMPY && \
-    sed -i 's/,ipdb//g' /SOMPY/sompy/sompy.py && \
-    sed -i 's/import\ ipdb//g' /SOMPY/sompy/visualization/mapview.py && \
     python3 setup.py install
 
 ADD *.py /code/
