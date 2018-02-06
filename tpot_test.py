@@ -42,7 +42,8 @@ def main():
     X_test_concat = np.concatenate([X_test, tsne_test], axis=1)
 
     tpot = TPOTClassifier(
-        max_time_mins=60 * 24,
+        max_time_mins=int(os.getenv('TIME_LIMIT_ALL', '1440')),
+        max_eval_time_mins=int(os.getenv('TIME_LIMIT_PART', '5')),
         population_size=100,
         scoring='log_loss',
         cv=3,
