@@ -1,3 +1,7 @@
+# Preface
+
+This repository fork accompanies that YouTube video: [https://youtu.be/4zRZO8j3Fr0](https://youtu.be/4zRZO8j3Fr0)
+
 # Numerai Experiments
 
 Folder structure:
@@ -25,7 +29,13 @@ Folder structure:
 # Running in a container
 
 ```
-docker build -t app . && docker run --name app --rm -v $PWD:/data app
+docker build -t r606020/numerai-jf .
+docker run \
+  -v $PWD:/data \
+  -e TRAINING=/data/numerai_training_data.csv \
+  -e TESTING=/data/numerai_tournament_data.csv \
+  -e PREDICTING=/data/predictions-ay_svm.csv \
+  r606020/numerai-jf
 ```
 
 # TensorFlow code diffs
