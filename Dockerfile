@@ -5,8 +5,7 @@ RUN apt-get -yq update && \
     apt-get -yq install curl python3 python3-pip python3-dev python3-tk build-essential git libopenblas-dev libblas-dev libatlas-base-dev
 
 ADD requirements.txt /tmp/requirements.txt
-RUN pip3 install --upgrade pip && \
-    pip3 install --no-cache-dir -r /tmp/requirements.txt && \
+RUN pip3 install --no-cache-dir -r /tmp/requirements.txt && \
     rm /tmp/requirements.txt
 RUN pip3 install runipy==0.1.3 && \
     sed -i "s/'svg'\,/'svg',\ 'text\/vnd\.plotly\.v1\+html'\:\ 'html'\,/g" /usr/local/lib/python3.5/dist-packages/runipy/notebook_runner.py
